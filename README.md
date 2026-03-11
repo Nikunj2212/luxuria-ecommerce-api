@@ -1,5 +1,7 @@
 # Luxuria Ecommerce Backend API
 
+A scalable Ecommerce Backend API built with Django REST Framework featuring authentication, cart management, order tracking, wishlist, reviews, deals, and customer support system.
+
 Luxuria is a full-featured **Ecommerce Backend System** built using **Python, Django, and Django REST Framework**.  
 The project provides a complete REST API for an ecommerce platform including product management, cart system, wishlist functionality, order management, order tracking, product reviews and ratings, deals and discounts system, and a customer support ticket system.
 
@@ -179,16 +181,16 @@ This backend is designed to simulate a **real-world ecommerce architecture** wit
 
 luxuria-ecommerce-api/
 
-accounts/ # User authentication and profile management
-api/ # REST API endpoints
-carts/ # Cart and order management
-contact/ # Customer support system
-core/ # Main Django project settings
-dashboard/ # Admin dashboard features
-products/ # Product and category management
-wishlist/ # Wishlist functionality
-media/ # Uploaded product images
-manage.py # Django project entry point
+accounts/     - User authentication and profile management
+api/          - REST API endpoints
+carts/        - Cart and order management
+contact/      - Customer support system
+core/         - Django project settings
+dashboard/    - Admin dashboard management
+products/     - Product and category management
+wishlist/     - Wishlist system
+media/        - Uploaded product images
+manage.py     - Django project entry point
 
 
 ---
@@ -258,4 +260,6 @@ http://127.0.0.1:8000/
 **Nikunj Panchal**
 
 Backend Developer  
-Python | Django | Django REST Framework
+Python | Django | Django REST Framework  
+
+GitHub: https://github.com/Nikunj2212
