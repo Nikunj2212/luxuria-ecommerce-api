@@ -181,16 +181,19 @@ This backend is designed to simulate a **real-world ecommerce architecture** wit
 
 luxuria-ecommerce-api/
 
-accounts/     - User authentication and profile management
-api/          - REST API endpoints
-carts/        - Cart and order management
-contact/      - Customer support system
-core/         - Django project settings
-dashboard/    - Admin dashboard management
-products/     - Product and category management
-wishlist/     - Wishlist system
-media/        - Uploaded product images
-manage.py     - Django project entry point
+├── accounts/ # User authentication and profile management
+├── api/ # REST API endpoints
+├── carts/ # Cart and order management
+├── contact/ # Customer support system
+├── core/ # Django project settings
+├── dashboard/ # Admin dashboard management
+├── products/ # Product and category management
+├── wishlist/ # Wishlist system
+├── media/ # Uploaded product images
+├── templates/ # HTML templates
+├── staticfiles/ # Static files (CSS, JS, images)
+├── manage.py # Django project entry point
+└── db.sqlite3 # SQLite database
 
 
 ---
