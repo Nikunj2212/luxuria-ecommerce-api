@@ -30,7 +30,8 @@ This backend is designed to simulate a **real-world ecommerce architecture** wit
 ### Tools
 - Git
 - GitHub
-- Postman
+- Postman (API Testing)
+- VS Code (Code Editor)
 
 ---
 
