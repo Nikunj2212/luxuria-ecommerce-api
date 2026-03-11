@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Complete Profile | Luxuria</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(135deg,#e6fffa,#f0fdfa);
+}
+
+/* MAIN CONTAINER */
+.container{
+    width:1100px;
+    margin:60px auto;
+    display:flex;
+    background:white;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.12);
+}
+
+/* LEFT PANEL */
+.left{
+    width:45%;
+    background:linear-gradient(135deg,#0f766e,#0d9488);
+    color:white;
+    padding:80px 60px;
+}
+.left h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+.left p{
+    font-size:16px;
+    opacity:.9;
+}
+
+/* RIGHT PANEL */
+.right{
+    width:55%;
+    padding:70px 70px;
+}
+.right h2{
+    font-size:34px;
+    margin-bottom:30px;
+}
+
+/* FORM */
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+.form-group.full{
+    grid-column:1 / -1;
+}
+label{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:#114b5f;
+}
+input{
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+    background:#f9fafb;
+    font-size:15px;
+}
+input:focus{
+    outline:none;
+    border-color:#0f766e;
+    background:#fff;
+}
+
+/* BUTTON */
+button{
+    margin-top:35px;
+    width:100%;
+    padding:15px;
+    background:#0f766e;
+    color:white;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+button:hover{
+    background:#115e59;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+    <div class="left">
+        <h1>Complete Profile</h1>
+        <p>
+            Just one last step!  
+            Complete your profile to enjoy seamless shopping on Luxuria.
+        </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+        <h2>Your Details</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <!-- USERNAME -->
+                <div class="form-group full">
+                    <label>Username</label>
+                    <input type="text"
+                           name="username"
+                           value="{{ request.user.username }}"
+                           placeholder="Enter username"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>House No</label>
+                    <input type="text"
+                           name="house_no"
+                           value="{{ address.house_no|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="text"
+                           name="pincode"
+                           value="{{ address.pincode|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group full">
+                    <label>Address Line</label>
+                    <input type="text"
+                           name="address_line1"
+                           value="{{ address.address_line1|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Landmark</label>
+                    <input type="text"
+                           name="landmark"
+                           value="{{ address.landmark|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Area</label>
+                    <input type="text"
+                           name="area"
+                           value="{{ address.area|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text"
+                           name="city"
+                           value="{{ address.city|default:'' }}"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text"
+                           name="state"
+                           value="{{ address.state|default:'' }}"
+                           required>
+                </div>
+
+            </div>
+
+            <button type="submit">Save & Continue</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<meta http-equiv="refresh" content="3; url={% url 'carts:payment_success' order_id %}">
+
+<style>
+.loader-box{
+    text-align:center;
+    padding:120px 20px;
+}
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid #eee;
+    border-top:6px solid #114b5f;
+    border-radius:50%;
+    margin:30px auto;
+    animation:spin 1s linear infinite;
+}
+@keyframes spin{100%{transform:rotate(360deg)}}
+</style>
+
+<div class="loader-box">
+    <h2>Processing your payment...</h2>
+    <div class="spinner"></div>
+    <p>Please do not refresh</p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Add Subcategory{% endblock %}
+
+{% block content %}
+
+<style>
+.form-wrapper {
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.form-wrapper h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #2c5a4c;
+}
+
+select, input {
+    width: 90%;
+    padding: 14px;
+    border: 1px solid #aaccc2;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-bottom: 18px;
+}
+
+button {
+    padding: 12px 20px;
+    background: #317f6f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+button:hover { opacity: .9; }
+</style>
+
+<div class="form-wrapper">
+    <h2>Add Subcategory</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <select name="category" required>
+        <option value="">Choose Category</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="name" placeholder="Subcategory name" required>
+
+    <input type="file" name="image" accept="image/*">
+
+    <button type="submit">Save</button>
+</form>
+
+</div>
+
+{% endblock %}

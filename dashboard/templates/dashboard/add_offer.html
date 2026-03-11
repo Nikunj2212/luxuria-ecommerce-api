@@ -1,0 +1,101 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Add Offer{% endblock %}
+{% block content %}
+
+<style>
+.form-wrapper {
+    background: white;
+    width: 420px;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    margin: auto;
+    margin-top: 30px;
+}
+.form-wrapper h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 22px;
+    color: #0b4e3d;
+}
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #b8d8cf;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.save-btn {
+    background: #1d7e5a;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+}
+</style>
+
+<div class="form-wrapper">
+    <h2>Add Offer</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="name" class="form-control" placeholder="Offer Name" required>
+
+        <input type="number" name="discount" class="form-control" placeholder="Discount %" required>
+
+        <label>Category</label>
+        <select name="category" id="category" class="form-control">
+            <option value="">Select Category</option>
+            {% for c in categories %}
+                <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Subcategory</label>
+        <select name="subcategory" id="subcategory" class="form-control">
+            <option value="">Select Subcategory</option>
+        </select>
+
+        <label>Product</label>
+        <select name="product" id="product" class="form-control">
+            <option value="">Select Product</option>
+        </select>
+
+        <label>
+            <input type="checkbox" name="is_active"> Active
+        </label>
+
+        <button type="submit" class="save-btn">Save Offer</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("category").addEventListener("change", function () {
+    fetch(`/dashboard/ajax/subcategories/?category_id=${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            let sub = document.getElementById("subcategory");
+            sub.innerHTML = "<option value=''>Select Subcategory</option>";
+            data.forEach(i => {
+                sub.innerHTML += `<option value="${i.id}">${i.name}</option>`;
+            });
+        });
+});
+
+document.getElementById("subcategory").addEventListener("change", function () {
+    fetch(`/dashboard/ajax/products/?subcategory_id=${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            let prod = document.getElementById("product");
+            prod.innerHTML = "<option value=''>Select Product</option>";
+            data.forEach(i => {
+                prod.innerHTML += `<option value="${i.id}">${i.name}</option>`;
+            });
+        });
+});
+</script>
+
+{% endblock %}  

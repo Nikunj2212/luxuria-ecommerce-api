@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+
+<style>
+.category-page{
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    gap:0;
+
+    margin:0;            /* ⬅️ center gap hata */
+    padding:0;           /* ⬅️ left space hata */
+}
+/* SIDEBAR */
+/* ===== SIDEBAR WRAPPER ===== */
+.brand-sidebar{
+    width:240px;
+
+    background:lightcream;
+    padding:12px 12px;
+
+    position:sticky;
+    top:72px;
+
+    height:calc(100vh - 72px);
+    overflow-y:auto;
+
+    border-right:1px solid #e5e7eb;
+
+    margin-left:0;       /* ⬅️ ensure no gap */
+}
+
+/* ===== TITLE ===== */
+.brand-sidebar h3{
+    margin:0 0 6px 0;
+    font-size:16px;
+    font-weight:700;
+}
+
+/* ===== LIST RESET ===== */
+.brand-sidebar ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+/* ===== LIST ITEM ===== */
+.brand-sidebar li{
+    margin:0;
+}
+
+/* ===== LINK (IMPORTANT FIX) ===== */
+.brand-sidebar a{
+    display:flex;                 /* 🔥 MUST */
+    align-items:center;
+    gap:12px;
+
+    padding:6px 8px;
+    margin-bottom:2px;
+
+    text-decoration:none;         /* 🔥 blue underline remove */
+    color:#0f1f1d;                /* 🔥 text color fix */
+    font-size:14px;
+    font-weight:500;
+
+    border-radius:10px;
+    transition:.2s ease;
+}
+
+/* ===== HOVER ===== */
+.brand-sidebar a:hover{
+    background:#f1f5f9;
+}
+
+/* ===== LOGO ===== */
+.brand-sidebar img{
+    width:32px;
+    height:32px;
+    object-fit:contain;
+    flex-shrink:0;
+}
+.product-title{
+    font-size:15px;
+    font-weight:600;
+    line-height:1.4;
+    height:42px;              /* 2 line ki height */
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;     /* MAX 2 lines */
+    -webkit-box-orient:vertical;
+    margin:10px 0 6px;
+}
+
+/* PRODUCTS */
+.product-area{
+    flex:1;
+    padding:30 40px;
+}
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:28px;
+}
+.product-card{
+    background:#fff;
+    padding:18px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+.product-card img{
+    height:180px;
+    object-fit:contain;
+}
+.btn-buy{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 20px;
+    background:#114b5f;
+    color:#fff;
+    border-radius:999px;
+    text-decoration:none;
+}
+.product-actions{
+    margin-top:12px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+}
+.product-actions a {
+    text-decoration: none;
+}
+
+.btn-view{
+    flex:1;
+    padding:10px 0;
+    background:#d1d5db;
+    color:#1f2937;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn-cart{
+    flex:1;
+    padding:10px 0;
+    background:#134e5e;
+    color:#fff;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn-view:hover{
+    background:#d1d5db;
+}
+
+.btn-cart:hover{
+    background:#059669;
+}
+.category-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.category-title{
+    font-size:28px;
+    font-weight:800;
+}
+
+.filter-form{
+    margin:0;
+}
+
+.price-filter{
+    padding:10px 14px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    font-weight:600;
+    cursor:pointer;
+}
+.wishlist-btn{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#f1f5f9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #e2e8f0;
+    transition:all .25s ease;
+    text-decoration:none;
+}
+
+.wishlist-btn i{
+    font-size:16px;
+    color:#64748b;
+    transition:.25s ease;
+}
+
+.wishlist-btn:hover{
+    background:#ffe4e6;
+    border-color:#fecdd3;
+}
+
+.wishlist-btn:hover i{
+    color:#e11d48;
+}
+
+.wishlist-btn.active{
+    background:#ffe4e6;
+    border-color:#fecdd3;
+}
+
+.wishlist-btn.active i{
+    color:#e11d48;
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-link:hover .product-title {
+    color: #114b5f;
+}
+
+</style>
+
+<div class="category-page">
+    
+
+    <aside class="brand-sidebar">
+        <h3>Brands</h3>
+        {% for sub in subcategories %}
+        <a href="{% url 'products:subcategory_products' sub.id %}">
+            {% if sub.image %}<img src="{{ sub.image.url }}">{% endif %}
+            {{ sub.name }}
+        </a>
+        {% endfor %}
+    </aside>
+    
+    <section class="product-area">
+        
+    <div class="category-header">
+
+    <h2 class="category-title">{{ category.name }}</h2>
+
+    <!-- FILTER DROPDOWN -->
+    <form method="GET" class="filter-form">
+        <select name="price" onchange="this.form.submit()" class="price-filter">
+
+            <option value="">Filter by Price</option>
+
+            <option value="0-10000" {% if selected_price == '0-10000' %}selected{% endif %}>
+                ₹0 – ₹10,000
+            </option>
+
+            <option value="10000-20000" {% if selected_price == '10000-20000' %}selected{% endif %}>
+                ₹10k – ₹20k
+            </option>
+
+            <option value="20000-30000" {% if selected_price == '20000-30000' %}selected{% endif %}>
+                ₹20k – ₹30k
+            </option>
+
+            <option value="30000+" {% if selected_price == '30000+' %}selected{% endif %}>
+                ₹30k+
+            </option>
+
+        </select>
+    </form>
+
+</div>
+
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product.image.url }}">
+                <a href="{% url 'products:product_detail' product.id %}" class="product-link">
+                    <h4 class="product-title">{{ product.name }}</h4>
+                </a>
+                    <p>₹{{ product.price }}</p>
+                <div class="product-actions">
+
+                    <a href="javascript:void(0);"
+                   class="btn-cart add-to-cart-btn"
+                   data-id="{{ product.id }}">
+                    Add
+                    </a>
+                    
+    <a href="{% url 'products:product_detail' product.id %}" class="btn-view">
+        View
+    </a>
+       <a href="javascript:void(0);"
+       class="wishlist-btn {% if product.id in wishlist_products %}active{% endif %}"
+       data-id="{{ product.id }}">
+
+        <i class="{% if product.id in wishlist_products %}fa-solid{% else %}fa-regular{% endif %} fa-heart"></i>
+
+    </a>
+
+</div>
+    
+
+
+        </div>
+            {% empty %}
+            <p>No products found.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+
+{% endblock %}

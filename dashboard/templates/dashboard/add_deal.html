@@ -1,0 +1,112 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<style>
+.form-card{
+    max-width:600px;
+    margin:40px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+.form-group{
+    margin-bottom:18px;
+}
+label{
+    display:block;
+    font-weight:600;
+    margin-bottom:6px;
+}
+select,input{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+button{
+    margin-top:20px;
+    padding:10px 24px;
+    border:none;
+    border-radius:20px;
+    background:#114b5f;
+    color:#fff;
+    font-weight:600;
+}
+</style>
+
+<div class="form-card">
+    <h2>➕ Add Deal</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Category</label>
+            <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                {% for c in categories %}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Subcategory</label>
+            <select id="subcategory" name="subcategory" required>
+                <option value="">Select Subcategory</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Product</label>
+            <select id="product" name="product" required>
+                <option value="">Select Product</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+             <label>Discount (%)</label>
+             <input type="number"
+             name="discount_percent"
+             step="0.01"
+             min="0"
+             max="100">
+             
+
+        <div class="form-group">
+            <label>Expiry</label>
+            <input type="datetime-local" name="expiry" required>
+        </div>
+
+        <button type="submit">Save Deal</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("category").addEventListener("change", function () {
+    fetch(`/dashboard/ajax/subcategories/?category_id=${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            let sub = document.getElementById("subcategory");
+            sub.innerHTML = `<option value="">Select Subcategory</option>`;
+            data.forEach(i => {
+                sub.innerHTML += `<option value="${i.id}">${i.name}</option>`;
+            });
+        });
+});
+
+document.getElementById("subcategory").addEventListener("change", function () {
+    fetch(`/dashboard/ajax/products/?subcategory_id=${this.value}`)
+        .then(res => res.json())
+        .then(data => {
+            let prod = document.getElementById("product");
+            prod.innerHTML = `<option value="">Select Product</option>`;
+            data.forEach(i => {
+                prod.innerHTML += `<option value="${i.id}">${i.name}</option>`;
+            });
+        });
+});
+</script>
+
+{% endblock %}

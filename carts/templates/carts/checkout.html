@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Secure Checkout | Luxuria{% endblock %}
+{% block content %}
+
+<style>
+.checkout-box{
+    max-width:900px;
+    margin:40px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.delivery-box{
+    background:#f7f7f7;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:20px;
+    position:relative;
+}
+.delivery-name{
+    font-weight:700;
+    font-size:18px;
+}
+.address-text{
+    margin-top:8px;
+    line-height:1.6;
+}
+.change-link{
+    color:#007185;
+    font-weight:600;
+    cursor:pointer;
+    position:absolute;
+    right:18px;
+    top:18px;
+}
+.edit-form{
+    display:none;
+    margin-top:15px;
+}
+.edit-form input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
+.total-box{
+    border-top:1px solid #eee;
+    padding-top:20px;
+    margin-top:25px;
+    font-size:20px;
+    font-weight:800;
+    display:flex;
+    justify-content:space-between;
+}
+.continue-btn{
+    width:100%;
+    margin-top:20px;
+    padding:16px;
+    background:#ffd814;
+    border:none;
+    border-radius:10px;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+}
+</style>
+
+<div class="checkout-box">
+
+    <!-- DELIVERY INFO -->
+    <div class="delivery-box">
+        <div>
+            <div class="delivery-name">
+                Delivering to {{ request.user.first_name|default:request.user.username }}
+            </div>
+            <div class="address-text">
+                {{ address.house_no }}, {{ address.address_line1 }}<br>
+                {{ address.landmark }}, {{ address.area }}<br>
+                {{ address.city }}, {{ address.state }} - {{ address.pincode }}<br>
+                Phone no: {{ request.user.phone }}
+            </div>
+        </div>
+        <div class="change-link" onclick="toggleEdit()">Change</div>
+    </div>  <!-- 🔥 DELIVERY BOX CLOSED HERE -->
+
+    <!-- INLINE EDIT FORM -->
+    <form method="POST" class="edit-form" id="editForm">
+        {% csrf_token %}
+        <input type="text" name="house_no" placeholder="House No" value="{{ address.house_no }}">
+        <input type="text" name="address_line1" placeholder="Address Line 1" value="{{ address.address_line1 }}">
+        <input type="text" name="landmark" placeholder="Landmark" value="{{ address.landmark }}">
+        <input type="text" name="area" placeholder="Area" value="{{ address.area }}">
+        <input type="text" name="city" placeholder="City" value="{{ address.city }}">
+        <input type="text" name="state" placeholder="State" value="{{ address.state }}">
+        <input type="text" name="pincode" placeholder="Pincode" value="{{ address.pincode }}">
+        <button type="submit" class="continue-btn" style="background:#114b5f;color:#fff;">Save Address</button>
+    </form>
+
+    <!-- ORDER TOTAL -->
+    <div class="total-box">
+        <span>Order Total</span>
+        <span>₹{{ total }}</span>
+    </div>
+
+<form method="POST" action="{% url 'carts:payment_method' %}">
+    {% csrf_token %}
+    <button type="submit" class="continue-btn">
+        Continue to Payment
+    </button>
+</form>
+</div>
+
+<script>
+function toggleEdit(){
+    let form = document.getElementById("editForm");
+    form.style.display = form.style.display === "block" ? "none" : "block";
+}
+</script>
+
+{% endblock %}

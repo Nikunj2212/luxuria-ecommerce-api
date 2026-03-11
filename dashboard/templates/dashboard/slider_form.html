@@ -1,0 +1,74 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<style>
+.slider-card{
+    max-width: 650px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+.slider-card h2{
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+.form-group{
+    margin-bottom: 20px;
+}
+label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+}
+input[type="file"],
+input[type="url"]{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+.checkbox-group{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+button{
+    margin-top:20px;
+    padding:10px 26px;
+    border:none;
+    border-radius:22px;
+    background:#114b5f;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+</style>
+
+<div class="slider-card">
+    <h2>➕ Add Home Slider</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Slider Image</label>
+            <input type="file" name="image" required>
+        </div>
+
+        <div class="form-group">
+            <label>Redirect URL</label>
+            <input type="url" name="redirect_url" placeholder="https://example.com">
+        </div>
+
+        <div class="form-group checkbox-group">
+            <input type="checkbox" name="is_active" checked>
+            <label>Active</label>
+        </div>
+
+        <button type="submit">Save Slider</button>
+    </form>
+</div>
+
+{% endblock %}

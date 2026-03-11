@@ -1,0 +1,890 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Luxury Home{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* ================= CATEGORY STRIP ================= */
+.category-strip{
+    width:100%;
+    padding:30px 0;
+    background:#ffffff;
+    border-bottom:1px solid #f1f1f1;
+    overflow:hidden;
+    white-space:nowrap;
+    scroll-behavior:smooth;
+}
+.category-strip::-webkit-scrollbar{display:none;}
+
+.category-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation: scrollCategories 25s linear infinite;
+    gap:40px;
+    width:max-content;
+}
+.category-box{
+    width:110px;           /* same fixed width */
+    text-align:center;
+    text-decoration:none;
+    color:#0f3f4c;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.category-box span{
+    margin-top:8px;
+    font-size:13px;
+    font-weight:600;
+    line-height:1.3;
+
+    display:-webkit-box;
+    -webkit-line-clamp:2;          /* 👈 max 2 lines */
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+
+    min-height:34px;               /* 👈 sabka height equal rahe */
+}
+.category-img{
+    width:90px;
+    height:70px;
+    margin:auto;
+}
+
+.category-img img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    border-radius:12px;   /* halka smooth corner */
+    transition:0.3s ease;
+}
+.category-box:hover img{
+    transform:scale(1.08);
+}
+.category-box:hover .category-img{
+    transform:translateY(-6px);
+    box-shadow:0 14px 30px rgba(0,0,0,0.15);
+}
+
+.category-box span{
+    display:block;
+    margin-top:10px;
+    font-weight:600;
+    font-size:14px;
+}
+/* ================= HERO ================= */
+.hero-slider{
+    position:relative;
+    width:100%;
+    height:500px;
+    overflow:hidden;
+}
+.hero-slide{
+    position:absolute;
+    inset:0;
+    display:none;
+    background-size:cover;
+    background-position:center;
+}
+.hero-slide.active{display:block;}
+
+/* ================= SECTION TITLE ================= */
+/* ================= DEALS WRAPPER ================= */
+.section-title{
+    text-align:center;
+    font-size:30px;
+    margin-bottom:40px;
+    color:#114b5f;
+    font-weight:700;
+}
+
+/* ================= DEALS CAROUSEL ================= */
+.deals-carousel{
+    display:flex;
+    gap:25px;
+    scroll-behavior:smooth;
+    padding-bottom:10px;
+}
+.deals-carousel::-webkit-scrollbar{
+    display:none;
+}
+
+
+
+.deal-title-link{
+    text-decoration:none;
+    color:#0f3f4c;
+}
+
+.deal-title-link:hover{
+    color:#0c2f3b;
+}
+.deals-wrapper{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:60px 0;  /* left right padding hatao */
+    overflow: hidden;
+    position: relative;
+}
+.deals-carousel::-webkit-scrollbar {
+    display: none;
+
+}
+
+.deals-carousel::after {
+    content: "";
+    flex: 0 0 1px;   /* 👈 extra fake space remove karega */
+}
+/* ================= DEAL CARD ================= */
+.deal-card{
+    min-width:240px;
+    background:#ffffff;
+    padding:22px 18px 28px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    transition:.3s ease;
+    overflow:hidden;
+    position:relative;    
+    flex: 0 0 300px;         /* 🔥 Important */
+}
+
+.deal-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+}
+
+/* ================= OFFER BADGE ================= */
+.deal-badge{
+    position:absolute;
+    top:15px;
+    left:15px;
+    background:#ff4d00;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:25px;
+    font-size:13px;
+    font-weight:600;
+    z-index:2;
+}
+
+/* ================= IMAGE ================= */
+.deal-card img{
+    width:140px;
+    height:170px;
+    object-fit:contain;
+    margin:30px auto 10px;
+}
+
+/* ================= TITLE ================= */
+.deal-card h4{
+    font-size:14px;
+    font-weight:600;
+    margin:10px 0 6px;
+    line-height:1.4;
+
+    /* 🔥 2 Line Clamp */
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+
+    min-height:40px; /* height fix for equal cards */
+}
+
+/* ================= PRICE ================= */
+.old-price{
+    text-decoration:line-through;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.new-price{
+    color:#e11d48;
+    font-size:18px;
+    font-weight:700;
+}
+
+.price{
+    font-size:16px;
+    font-weight:600;
+}
+
+/* ================= TIMER ================= */
+.deal-timer{
+    font-size:13px;
+    font-weight:600;
+    color:#dc2626;
+    margin:8px 0 14px;
+}
+
+/* ================= BUTTON GROUP ================= */
+.deal-btn-group{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    margin-top:18px;
+    width:100%;
+}
+/* COMMON BUTTON STYLE */
+.deal-btn-group a{
+    flex:1;                     /* 🔥 auto adjust */
+    max-width:130px;            /* limit width */
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:600;
+    text-decoration:none;
+    transition:all .25s ease;
+}
+/* ADD TO CART */
+.deal-cart-btn{
+    background:#134E5E;
+    color:#ffffff;
+}
+
+.deal-cart-btn:hover{
+    background:#0f3d4d;
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+.deal-view-btn{
+    background:#d1d5db;
+    color:#1f2937;
+}
+
+.deal-view-btn:hover{
+    background:#bfc5cc;
+    transform:translateY(-2px);
+}
+
+/* ================= PRODUCTS GRID ================= */
+.home-products{
+    padding:60px 40px;
+}
+.productt-gridd{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:28px;
+}
+.productt-ccard{
+    background:#fff;
+    padding:20px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    transition:.25s;
+}
+.productt-ccard:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+}
+.productt-ccard img{
+    width:100%;
+    height:220px;
+    object-fit:contain;
+}
+.productt-ttitle{
+    font-size:15px;
+    font-weight:600;
+    margin:12px 0 8px;
+    line-height:1.4;
+    
+    /* 🔥 2 Line Limit */
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    
+    min-height:42px;   /* 2 line height fix */
+}
+.price{
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+/* ===== PRODUCT ACTIONS ===== */
+.producct-actionss{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+}
+
+/* ===== WISHLIST ===== */
+/* ===== PRODUCT ACTIONS FIXED (2ND PAGE MATCH) ===== */
+.producct-actionss{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-top:18px;
+}
+
+/* ADD TO CART */
+.producct-actionss .btn-cart{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:42px;
+    padding:0 25px;
+    border-radius:999px;
+    background:#134E5E;
+    color:#fff !important;
+    font-size:15px;
+    font-weight:600;
+    text-decoration:none;
+    transition:all .25s ease;
+    margin-left:10px;
+}
+
+.producct-actionss .btn-cart:hover{
+    background:#16a34a;
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+
+/* VIEW BUTTON */
+.producct-actionss .btnn-vieww{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:42px;
+    padding:0 22px;
+    border-radius:999px;
+    background:#d1d5db;
+    color:#1f2937 !important;
+    font-size:15px;
+    font-weight:600;
+    text-decoration:none;
+    transition:all .25s ease;
+}
+
+.producct-actionss .btnn-vieww:hover{
+    background:#d1d5db;
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+}
+
+/* WISHLIST */
+.producct-actionss .wishlist-btn{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:#e5e7eb;
+    border:1px solid #d1d5db;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s ease;
+}
+
+.producct-actionss .wishlist-btn i{
+    font-size:18px;
+    color:#64748b;
+}
+
+.producct-actionss .wishlist-btn:hover{
+    background:#ffe4e6;
+    border-color:#fecdd3;
+}
+
+.producct-actionss .wishlist-btn:hover i{
+    color:#e11d48;
+}
+.wishlist-btn{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    min-height:44px;
+    border-radius:50%;
+    background:#f1f5f9;
+    border:1px solid #dbe3ea;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none !important;
+    transition:all .25s ease;
+}
+
+/* icon */
+.wishlist-btn i{
+    font-size:17px;
+    color:#64748b;
+    transition:.25s;
+}
+
+/* hover */
+.wishlist-btn:hover{
+    background:#e2e8f0;
+}
+
+.wishlist-btn:hover i{
+    color:#0f3f4c;
+}
+
+/* active (when added) */
+.wishlist-btn.active{
+    background:#ffe4e6;
+    border-color:#fecdd3;
+}
+
+.wishlist-btn.active i{
+    color:#e11d48;
+}
+.carousel-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    background:#ffffff;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    font-size:22px;
+    font-weight:700;
+    cursor:pointer;
+    z-index:10;
+    transition:all .25s ease;
+}
+
+.deal-link{
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.deal-title{
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.deal-link:hover .deal-title{
+    color: #0f3f4c;
+}
+.product-link{
+    text-decoration: none;
+    color: #111;
+    display: block;
+}
+
+.product-link:hover{
+    color: #0f3f4c;
+}
+
+.hero-slider {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+}
+
+.hero-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+/* Arrow Styling */
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-arrow.prev {
+    left: 25px;
+}
+
+.hero-arrow.next {
+    right: 25px;
+}
+
+.hero-arrow:hover {
+    background: #16a34a;
+    color: white;
+}
+
+</style>
+
+
+<!-- ================= CATEGORY STRIP ================= -->
+<div class="category-strip">
+    <div class="category-row" id="categoryRow">
+        {% for category in categories %}
+        <a href="{% url 'products:category_products' category.id %}" class="category-box">
+            <div class="category-img">
+                <img src="{{ category.image.url }}" alt="{{ category.name }}">
+            </div>
+            <span>{{ category.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<div class="hero-slider">
+
+    {% for slide in sliders %}
+        <div class="hero-slide {% if forloop.first %}active{% endif %}"
+             style="background-image:url('{{ slide.image.url }}')"
+             {% if slide.redirect_url %}
+             data-link="{{ slide.redirect_url }}"
+             {% endif %}>
+        </div>
+    {% endfor %}
+
+    <!-- Arrows -->
+    <button class="hero-arrow prev">&#10094;</button>
+    <button class="hero-arrow next">&#10095;</button>
+
+</div>
+<!-- ================= DEALS ================= -->
+<div class="deals-wrapper" id="deals">
+
+    <h2 class="section-title">🔥 Deals of the Day</h2>
+
+    <!-- LEFT ARROW -->
+
+    <div class="deals-carousel" id="dealCarousel">
+        {% for deal in deals_of_day %}
+        <div class="deal-card" data-expiry="{{ deal.expiry|date:'Y-m-d H:i:s' }}">
+
+            <span class="deal-badge">{{ deal.discount_percent }}% OFF</span>
+
+            <img src="{{ deal.product.image.url }}">
+
+            <a href="{% url 'products:product_detail' deal.product.id %}" class="deal-title-link">
+                <h4>{{ deal.product.name }}</h4>
+            </a>
+
+            {% if deal.is_active %}
+                <p class="old-price">₹{{ deal.product.price }}</p>
+                <p class="new-price">₹{{ deal.discounted_price }}</p>
+            {% else %}
+                <p class="price">₹{{ deal.product.price }}</p>
+            {% endif %}
+
+            <div class="deal-timer"><span class="timer"></span></div>
+
+            <div class="deal-btn-group">
+        {% if deal.product.id in cart_products %}
+            <a href="javascript:void(0);"
+            class="deal-cart-btn add-to-cart-btn"
+            data-id="{{ deal.product.id }}"
+            style="background:#16a34a;">
+            Added
+            </a>
+        {% else %}
+            <a href="javascript:void(0);"
+            class="deal-cart-btn add-to-cart-btn"
+            data-id="{{ deal.product.id }}">
+            Add
+            </a>
+        {% endif %}
+
+                <a href="{% url 'products:product_detail' deal.product.id %}"
+                   class="deal-view-btn">
+                   View
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+<div class="home-products">
+    <h2 style="text-align:center;margin-bottom:40px;">All Products</h2>
+
+    <div class="productt-gridd">
+
+        {% for product in products %}
+        <div class="productt-ccard">
+
+            <img src="{{ product.image.url }}">
+
+            <h4 class="productt-ttitle">
+                <a href="{% url 'products:product_detail' product.id %}" class="product-link">
+                    {{ product.name }}
+                </a>
+            </h4>
+
+            <p class="price">₹{{ product.price }}</p>
+
+            <div class="producct-actionss">
+            
+            {% if product.id in cart_products %}
+                <a href="javascript:void(0);"
+                class="btn-cart add-to-cart-btn added"
+                data-id="{{ product.id }}"
+                style="background:#16a34a;">
+                Added
+                </a>
+            {% else %}
+                <a href="javascript:void(0);"
+                class="btn-cart add-to-cart-btn"
+                data-id="{{ product.id }}">
+                Add
+                </a>
+            {% endif %}
+
+                <a href="{% url 'products:product_detail' product.id %}"
+                   class="btnn-vieww">
+                   View
+                </a>
+
+                <a href="javascript:void(0);"
+                class="wishlist-btn"
+                data-id="{{ product.id }}">
+                <i class="fa-regular fa-heart"></i>
+                </a>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+<script>
+/* HERO SLIDER */
+const slides=document.querySelectorAll(".hero-slide");
+let index=0;
+if(slides.length>1){
+    setInterval(()=>{
+        slides[index].classList.remove("active");
+        index=(index+1)%slides.length;
+        slides[index].classList.add("active");
+    },4000);
+}
+
+document.querySelectorAll('.hero-slide').forEach(slide => {
+    slide.addEventListener('click', function () {
+        const link = this.getAttribute('data-link');
+        if (link) {
+            window.location.href = link;   // same tab
+            // window.open(link, '_blank'); // new tab (agar chahiye)
+        }
+    });
+});
+
+/* DEAL TIMER */
+document.querySelectorAll(".deal-card, .featured-deal").forEach(card => {
+
+    const end = new Date(card.dataset.expiry.replace(" ", "T"));
+    const timer = card.querySelector(".timer");
+
+    function tick(){
+
+        const diff = end - new Date();
+
+        if(diff <= 0){
+            timer.innerText = "Expired";
+            return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+
+        const days = Math.floor(totalSeconds / (24 * 3600));
+        const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if(days > 0){
+            timer.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            timer.innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+
+    tick();
+    setInterval(tick, 1000);
+
+});
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const row = document.getElementById("categoryRow");
+    if(!row) return;
+
+    // Duplicate once for infinite effect
+    row.innerHTML += row.innerHTML;
+
+    let scrollAmount = 0;
+    let speed = 0.6;
+    let isPaused = false;
+
+    function autoScroll(){
+
+        if(!isPaused){
+            scrollAmount += speed;
+
+            if(scrollAmount >= row.scrollWidth / 2){
+                scrollAmount = 0;
+            }
+
+            row.style.transform = `translateX(-${scrollAmount}px)`;
+        }
+
+        requestAnimationFrame(autoScroll);
+    }
+
+    autoScroll();
+
+    // Hover pe stop
+    row.addEventListener("mouseenter", function(){
+        isPaused = true;
+    });
+
+    // Mouse leave pe start
+    row.addEventListener("mouseleave", function(){
+        isPaused = false;
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const track = document.getElementById("dealCarousel");
+    if(!track) return;
+
+    const cards = Array.from(track.children);
+    const gap = 25;
+    const cardWidth = cards[0].offsetWidth + gap;
+
+    // Clone all cards once
+    cards.forEach(card => {
+        const clone = card.cloneNode(true);
+        track.appendChild(clone);
+    });
+
+    let position = 0;
+    let speed = 0.6;
+    const totalWidth = cardWidth * cards.length;
+
+    let isPaused = false;   // 🔥 pause control
+
+    function animate(){
+
+        if(!isPaused){
+            position += speed;
+
+            if(position >= totalWidth){
+                position = 0;
+            }
+
+            track.style.transform = `translateX(-${position}px)`;
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // 🔥 Hover events
+    track.addEventListener("mouseenter", function(){
+        isPaused = true;
+    });
+
+    track.addEventListener("mouseleave", function(){
+        isPaused = false;
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slides = document.querySelectorAll(".hero-slide");
+    const nextBtn = document.querySelector(".hero-arrow.next");
+    const prevBtn = document.querySelector(".hero-arrow.prev");
+
+    if (!slides.length || !nextBtn || !prevBtn) {
+        return;
+    }
+
+    let current = 0;
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove("active"));
+        slides[index].classList.add("active");
+    }
+
+    function nextSlide() {
+        current++;
+        if (current >= slides.length) {
+            current = 0;
+        }
+        showSlide(current);
+    }
+
+    function prevSlide() {
+        current--;
+        if (current < 0) {
+            current = slides.length - 1;
+        }
+        showSlide(current);
+    }
+
+    nextBtn.addEventListener("click", function () {
+        nextSlide();
+        resetAutoSlide();
+    });
+
+    prevBtn.addEventListener("click", function () {
+        prevSlide();
+        resetAutoSlide();
+    });
+
+    // 🔥 AUTO SLIDE SPEED (yaha change karna)
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 3000); // 3000 = 3 sec
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        startAutoSlide();
+    }
+
+    startAutoSlide(); // auto start
+
+});    
+
+</script>
+
+{% endblock %}

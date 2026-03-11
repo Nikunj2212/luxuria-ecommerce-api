@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login | Luxuria</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body{
+    margin:0;
+    height:100vh;
+    background:linear-gradient(135deg,#e6fffa,#f0fdfa);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* MAIN CARD */
+.login-wrapper{
+    width:1100px;
+    max-width:95%;
+    background:#fff;
+    border-radius:26px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow:0 40px 80px rgba(0,0,0,0.25);
+}
+
+/* LEFT PANEL */
+.login-left{
+    background:linear-gradient(160deg,#0f4c5c,#0f766e);
+    padding:80px 60px;
+    color:#fff;
+}
+
+.login-left h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.login-left p{
+    font-size:17px;
+    line-height:1.6;
+    opacity:.95;
+}
+
+/* RIGHT PANEL */
+.login-right{
+    padding:80px 70px;
+}
+
+.login-right h2{
+    font-size:34px;
+    margin-bottom:6px;
+}
+
+.login-right small{
+    color:#6b7280;
+    display:block;
+    margin-bottom:35px;
+    font-size:15px;
+}
+
+/* INPUTS */
+.input-box{
+    margin-bottom:22px;
+}
+
+.input-box input{
+    width:100%;
+    padding:16px 18px;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
+    background:#f9fafb;
+    font-size:16px;
+}
+
+.input-box input:focus{
+    outline:none;
+    border-color:#0f766e;
+    background:#fff;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:16px;
+    background:#0f766e;
+    color:white;
+    border:none;
+    border-radius:16px;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:hover{
+    background:#115e59;
+}
+
+/* FOOTER LINK */
+.bottom-link{
+    margin-top:26px;
+    text-align:center;
+    font-size:15px;
+}
+
+.bottom-link a{
+    color:#0f766e;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.bottom-link a:hover{
+    text-decoration:underline;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    .login-wrapper{
+        grid-template-columns:1fr;
+    }
+    .login-left{
+        padding:60px 40px;
+        text-align:center;
+    }
+    .login-right{
+        padding:60px 40px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <!-- LEFT -->
+    <div class="login-left">
+        <h1>Admin Dashboard</h1>
+        <p>
+            Secure access for administrators.<br>
+            Manage products, orders, users and reports<br>
+            from one powerful dashboard.
+        </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="login-right">
+        <h2>Admin Login</h2>
+        <small>Login to manage Luxuria</small>
+
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Admin Username" autocomplete="username" required>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" autocomplete="new-password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="bottom-link">
+            No Admin?
+            <a href="{% url 'dashboard:dashboard_create_admin' %}">
+                Create Admin
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

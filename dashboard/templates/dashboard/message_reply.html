@@ -1,0 +1,16 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Reply Message{% endblock %}
+{% block content %}
+
+<h2>Reply to {{ msg.email }}</h2>
+
+<p><strong>Message:</strong> {{ msg.message }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="reply" rows="6" required style="width:100%;margin-top:15px;"></textarea>
+    <br><br>
+    <button type="submit" style="padding:10px;background:#111;color:#fff;border-radius:6px;">Send Reply</button>
+</form>
+
+{% endblock %}

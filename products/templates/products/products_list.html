@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Collection | Luxuria{% endblock %}
+{% block content %}
+
+<style>
+.page-wrap {
+    min-height: 80vh;
+    padding-top: 40px;
+}
+
+.sub-wrapper {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.sub-card {
+    background: white;
+    padding: 16px;
+    border-radius: 14px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+    transition: 0.25s;
+}
+
+.sub-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.sub-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 26px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    transition: 0.25s;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    margin-top: 18px;
+}
+
+/* 🔥 OFFER BADGE */
+.offer-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    padding: 4px 10px;
+    border-radius: 20px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    z-index: 5;
+}
+
+
+/* 💰 PRICE STYLES */
+.old-price {
+    text-decoration: line-through;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.new-price {
+    color: #e11d48;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* BUTTONS */
+.add-btn {
+    margin-top: 14px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: black;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.btn-view {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 6px;
+    color: #2563eb;
+    font-weight: 500;
+}
+</style>
+<!-- 🔥 PRICE FILTER -->
+<div style="width:100%;padding:20px 6%;background:#fff;margin-bottom:25px;border-radius:16px;">
+    <form method="GET" style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+        <h3 style="margin:0;">Filter by Price:</h3>
+
+        <input type="number" name="min_price" placeholder="Min ₹"
+               value="{{ min_price }}"
+               style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+
+        <input type="number" name="max_price" placeholder="Max ₹"
+               value="{{ max_price }}"
+               style="padding:10px;border-radius:8px;border:1px solid #ccc;">
+
+        <button type="submit"
+                style="background:#0f766e;color:#fff;padding:10px 18px;border-radius:8px;border:none;">
+            Apply
+        </button>
+
+        <a href="?" style="padding:10px 18px;border-radius:8px;border:1px solid #ccc;text-decoration:none;">
+            Reset
+        </a>
+    </form>
+</div>
+
+<div class="page-wrap">
+
+{% if subcategories %}
+    <h2 style="text-align:center;">Choose Subcategory</h2>
+
+    <div class="sub-wrapper">
+        {% for sub in subcategories %}
+        <a href="/products/?sub={{ sub.id }}" class="sub-card">
+            {% if sub.image %}
+                <img src="{{ sub.image.url }}">
+            {% else %}
+                <div style="height:140px; background:#f1f1f1; border-radius:10px;
+                            display:flex; align-items:center; justify-content:center;">
+                    No Image
+                </div>
+            {% endif %}
+            <p style="font-weight:600; margin-top:8px;">{{ sub.name }}</p>
+        </a>
+        {% endfor %}
+    </div>
+
+{% elif products %}
+    <h2 style="text-align:center;">Available Products</h2>
+
+    <div class="product-wrapper">
+        {% for p in products %}
+        <div class="product-card">
+
+            {% if p.offer and p.offer.active %}
+                <span class="offer-badge">{{ p.offer.discount }}% OFF</span>
+            {% endif %}
+
+            <img src="{{ p.image.url }}" alt="{{ p.name }}">
+
+            <h3>{{ p.name }}</h3>
+
+            {% if p.discounted_price %}
+                <p class="old-price">₹ {{ p.price }}</p>
+                <p class="new-price">₹ {{ p.discounted_price }}</p>
+            {% else %}
+                <p class="price">₹ {{ p.price }}</p>
+            {% endif %}
+
+            <a href="{% url 'products:product_detail' p.id %}" class="btn-view">
+                View
+            </a>
+
+            <a href="{% url 'carts:add_to_cart' p.id %}" class="add-btn">
+                Add to Cart
+            </a>
+            
+        </div>
+        {% endfor %}
+    </div>
+
+{% else %}
+    <p style="text-align:center; font-size:18px; margin-top:40px;">
+        No products found.
+    </p>
+{% endif %}
+
+</div>
+
+{% endblock %}

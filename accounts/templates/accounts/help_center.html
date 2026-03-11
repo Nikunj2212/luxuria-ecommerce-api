@@ -1,0 +1,167 @@
+{% extends "accounts/base_account.html" %}
+{% block title %}Help Center{% endblock %}
+
+{% block account_content %}
+
+<style>
+
+/* ===== HERO WRAPPER ===== */
+.help-hero{
+    background:linear-gradient(135deg,#0f172a,#064e3b);
+    border-radius:30px;
+    padding:50px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Glow effect */
+.help-hero::after{
+    content:"";
+    position:absolute;
+    width:420px;
+    height:420px;
+    background:rgba(20,184,166,0.15);
+    border-radius:50%;
+    top:-120px;
+    right:-120px;
+}
+
+/* HEADER */
+.help-header{
+    margin-bottom:30px;
+}
+
+.help-header h2{
+    font-size:26px;
+    margin-bottom:6px;
+}
+
+.help-header p{
+    opacity:.8;
+    font-size:14px;
+}
+
+/* GLASS CARD */
+.ticket-card{
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:22px;
+    margin-bottom:18px;
+    transition:.3s;
+}
+
+.ticket-card:hover{
+    background:rgba(255,255,255,0.08);
+    transform:translateY(-3px);
+}
+
+/* STATUS BADGE */
+.status-badge{
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:600;
+    display:inline-block;
+    margin-left:8px;
+}
+
+.status-open{
+    background:#22c55e;
+}
+
+.status-closed{
+    background:#ef4444;
+}
+
+/* BUTTON */
+.view-btn{
+    margin-top:12px;
+    display:inline-block;
+    padding:7px 16px;
+    border-radius:20px;
+    font-size:13px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#14b8a6,#0f766e);
+    color:white;
+    transition:.3s;
+}
+
+.view-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(20,184,166,0.4);
+}
+
+/* CREATE BUTTON */
+.create-btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 18px;
+    border-radius:25px;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.create-btn:hover{
+    background:rgba(255,255,255,0.25);
+}
+
+/* EMPTY STATE */
+.empty-state{
+    text-align:center;
+    padding:40px 0;
+    opacity:.8;
+}
+
+</style>
+
+<div class="help-hero">
+
+    <div class="help-header">
+        <h2>🎧 Help Center</h2>
+        <p>Manage your support requests and conversations</p>
+    </div>
+
+    {% if threads %}
+
+        {% for t in threads %}
+            <div class="ticket-card">
+                
+                <strong style="font-size:16px;">{{ t.subject }}</strong>
+
+                {% if t.status == "open" %}
+                    <span class="status-badge status-open">Open</span>
+                {% else %}
+                    <span class="status-badge status-closed">Closed</span>
+                {% endif %}
+
+                <div style="margin-top:6px;font-size:13px;opacity:.8;">
+                    {{ t.created_at|date:"d M Y h:i A" }}
+                </div>
+
+                <a href="{% url 'accounts:ticket_detail' thread_id=t.id %}"
+                   class="view-btn">
+                   View Conversation
+                </a>
+
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="ticket-card empty-state">
+            😔 No support tickets yet.
+        </div>
+    {% endif %}
+
+    <a href="/contact/" class="create-btn">
+        + Create New Ticket
+    </a>
+
+</div>
+
+{% endblock %}

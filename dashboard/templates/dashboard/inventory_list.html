@@ -1,0 +1,55 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Inventory{% endblock %}
+{% block content %}
+
+<style>
+.page-header { margin-bottom: 25px; }
+.page-header h2 { font-size: 26px; font-weight: 600; color: #0b4e3d; }
+
+.table-box {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    max-width: 1000px;
+}
+table { width: 100%; border-collapse: collapse; }
+table th {
+    background: #def2ee;
+    padding: 12px;
+    border-bottom: 2px solid #cfe7e1;
+    font-size: 14px;
+    font-weight: 600;
+}
+table td {
+    padding: 12px;
+    border-bottom: 1px solid #e6f4f1;
+    font-size: 14px;
+}
+</style>
+
+<div class="page-header">
+    <h2>Inventory</h2>
+</div>
+
+<div class="table-box">
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Quantity Sold</th>
+        <th>Remaining (optional)</th>
+    </tr>
+
+    {% for item in items %}
+    <tr>
+        <td>{{ item.product }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>—</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3" style="text-align:center;">No inventory records</td></tr>
+    {% endfor %}
+</table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<style>
+.edit-deal-card{
+    max-width:500px;
+    margin:50px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.08);
+}
+label{ font-weight:600; margin-bottom:6px; display:block; }
+input{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    margin-bottom:16px;
+}
+.save-btn{
+    background:#114b5f;
+    color:#fff;
+    padding:10px 22px;
+    border:none;
+    border-radius:10px;
+}
+.cancel-btn{
+    margin-left:10px;
+    color:#555;
+    text-decoration:none;
+}
+</style>
+
+<div class="edit-deal-card">
+    <h2>Edit Deal</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- STATUS -->
+        <label>Status</label>
+        {% if deal.is_active %}
+            <span style="color:#166534;background:#dcfce7;padding:6px 14px;border-radius:999px;">ACTIVE</span>
+        {% else %}
+            <span style="color:#991b1b;background:#fee2e2;padding:6px 14px;border-radius:999px;">EXPIRED</span>
+        {% endif %}
+
+        <!-- DISCOUNT -->
+        <label style="margin-top:18px;">Discount %</label>
+        <input type="number"
+               name="discount_percent"
+               min="1"
+               max="90"
+               placeholder="Eg. 10"
+               value="{{ deal.discount_percent }}">
+
+        <!-- EXPIRY -->
+        <label>Expiry</label>
+        <input type="datetime-local"
+               name="expiry"
+               value="{{ deal.expiry|date:'Y-m-d\\TH:i' }}">
+
+        <button type="submit" class="save-btn">Update Deal</button>
+        <a href="{% url 'dashboard:deals_list' %}" class="cancel-btn">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

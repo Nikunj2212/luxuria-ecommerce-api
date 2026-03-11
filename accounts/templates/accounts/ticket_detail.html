@@ -1,0 +1,183 @@
+{% extends "accounts/base_account.html" %}
+{% block account_content %}
+
+<style>
+
+.ticket-wrapper{
+    max-width:900px;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    padding:35px;
+    border-radius:24px;
+    box-shadow:0 25px 60px rgba(0,0,0,.25);
+    color:white;
+}
+
+/* TOP HEADER FLEX */
+.ticket-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+/* LEFT SIDE */
+.ticket-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+/* BACK BUTTON */
+.back-btn{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+    transition:.3s;
+}
+
+.back-btn:hover{
+    background:#14b8a6;
+    transform:translateX(-4px);
+}
+
+/* NEW TICKET BUTTON */
+.new-ticket-btn{
+    padding:10px 18px;
+    background:linear-gradient(135deg,#14b8a6,#0f766e);
+    color:white;
+    border-radius:12px;
+    font-size:14px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.new-ticket-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(20,184,166,0.4);
+}
+
+/* CHAT */
+.chat-box{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.msg{
+    max-width:70%;
+    padding:14px 18px;
+    border-radius:16px;
+    font-size:15px;
+}
+
+.msg-user{
+    align-self:flex-end;
+    background:linear-gradient(135deg,#00c9a7,#008b8b);
+    color:white;
+}
+
+.msg-admin{
+    align-self:flex-start;
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.2);
+}
+
+.msg small{
+    display:block;
+    margin-top:6px;
+    font-size:12px;
+    opacity:.7;
+}
+
+/* REPLY */
+.reply-area textarea{
+    width:100%;
+    height:110px;
+    resize:none;
+    border-radius:12px;
+    padding:14px;
+    border:none;
+    background:rgba(255,255,255,0.15);
+    color:white;
+}
+
+.reply-area button{
+    margin-top:12px;
+    background:#00c9a7;
+    border:none;
+    padding:10px 26px;
+    border-radius:25px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.closed-box{
+    margin-top:20px;
+    padding:14px;
+    background:rgba(255,0,0,0.15);
+    border-radius:12px;
+}
+
+</style>
+
+<div class="ticket-wrapper">
+
+    <!-- TOP HEADER -->
+    <div class="ticket-top">
+
+        <div class="ticket-left">
+            <a href="{% url 'accounts:help_center' %}" class="back-btn">
+                ←
+            </a>
+
+            <div>
+                <h2 style="margin:0;">🎧 Support Conversation</h2>
+                <div style="font-size:14px;opacity:.8;">
+                    Ticket by <strong>{{ thread.user.username }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'contact_page' %}" class="new-ticket-btn">
+            + New Ticket
+        </a>
+
+    </div>
+
+    <!-- CHAT MESSAGES -->
+    <div class="chat-box">
+        {% for m in messages %}
+            <div class="msg {% if m.sender == 'admin' %}msg-admin{% else %}msg-user{% endif %}">
+                {{ m.message }}
+                <small>{{ m.created_at|date:"d M Y · h:i A" }}</small>
+            </div>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- CLOSED CHECK -->
+    {% if thread.status == "closed" %}
+        <div class="closed-box">
+            🚫 This ticket is closed by admin.
+        </div>
+    {% else %}
+        <form method="post" class="reply-area">
+            {% csrf_token %}
+            <textarea name="message" placeholder="Type your message here..." required></textarea>
+            <button type="submit">Send Reply</button>
+        </form>
+    {% endif %}
+
+</div>
+
+{% endblock %}

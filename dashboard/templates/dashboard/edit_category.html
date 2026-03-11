@@ -1,0 +1,16 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Edit Category{% endblock %}
+
+{% block content %}
+<h2>Edit Category</h2>
+
+<form method="post" style="background:white; padding:20px; width:60%; border-radius:10px;">
+    {% csrf_token %}
+    <input type="text" name="name" value="{{ category.name }}" 
+           placeholder="Category name"
+           style="width:100%; padding:10px; margin-bottom:12px;">
+    <button style="background:#3a8b68; color:white; padding:8px 15px; border:none;">
+        Save Changes
+    </button>
+</form>
+{% endblock %}

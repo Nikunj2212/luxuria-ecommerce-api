@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+
+<style>
+.account-layout{
+    display:flex;
+    width:100%;
+    min-height:calc(100vh - 80px);
+}
+/* SIDEBAR */
+.account-sidebar{
+    width:260px;
+    background:#114b5f;
+    padding:40px 20px;
+    color:white;
+}
+
+/* SIDEBAR TITLE */
+.account-sidebar h3{
+    margin-bottom:30px;
+    font-size:22px;
+}
+
+/* LINKS */
+.account-sidebar a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+    transition:.3s;
+}
+
+.account-sidebar a i{
+    width:18px;
+    text-align:center;
+    font-size:16px;
+}
+
+.account-sidebar a.active{
+    background:white;
+    color:#114b5f;
+}
+
+.account-sidebar a.active i{
+    color:#114b5f;
+}
+.account-sidebar a:hover{
+    background:rgba(255,255,255,0.15);
+}
+
+/* MAIN AREA */
+.account-main{
+    flex:1;
+    padding:50px;
+    background:#e8f6f3;
+}
+</style>
+
+<div class="account-layout">
+
+    <div class="account-sidebar">
+        <h3>My Account</h3>
+
+        <a href="{% url 'accounts:profile' %}"
+        class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <i class="fa-solid fa-user"></i>
+        Profile
+        </a>
+
+        <a href="{% url 'accounts:my_orders' %}"
+        class="{% if request.resolver_match.url_name == 'my_orders' %}active{% endif %}">
+        <i class="fa-solid fa-bag-shopping"></i>
+        My Orders
+        </a>
+
+        <a href="{% url 'accounts:wishlist' %}"
+        class="{% if request.resolver_match.url_name == 'wishlist' %}active{% endif %}">
+        <i class="fa-solid fa-heart"></i>
+        Wishlist
+        </a>
+
+        <a href="{% url 'accounts:change_password' %}">
+        <i class="fa-solid fa-key"></i>
+        Change Password
+        </a>
+
+        <a href="{% url 'accounts:help_center' %}">
+        <i class="fa-solid fa-headset"></i>
+        Help Center
+        </a>
+
+        <a href="{% url 'accounts:logout' %}">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+        </a>
+    </div>
+
+    <div class="account-main">
+        {% block account_content %}{% endblock %}
+    </div>
+
+</div>
+
+{% endblock %}

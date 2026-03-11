@@ -1,0 +1,22 @@
+{% extends "accounts/base_account.html" %}
+{% block title %}Ticket{% endblock %}
+
+{% block content %}
+<h2>{{ thread.subject }}</h2>
+<hr>
+
+{% for m in messages %}
+<div style="margin-bottom:12px;padding:12px;border-radius:6px;
+     {% if m.sender == 'admin' %} background:#dff1ff;
+     {% else %} background:#e8f7f4; {% endif %}">
+    <strong>{{ m.sender|title }}:</strong><br>
+    {{ m.message }}<br>
+    <small>{{ m.created_at|date:"d M Y h:i A" }}</small>
+</div>
+{% endfor %}
+
+<hr>
+<a href="/contact/" class="btn" style="padding:10px 15px;background:#114b5f;color:white;border-radius:5px;">
+    Send New Message
+</a>
+{% endblock %}

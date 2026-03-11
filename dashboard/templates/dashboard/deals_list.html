@@ -1,0 +1,149 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<style>
+.deals-card{
+    max-width:1100px;
+    margin:40px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.08);
+}
+
+.deals-card h2{
+    margin-bottom:25px;
+    color:#114b5f;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.add-btn{
+    padding:8px 18px;
+    background:#114b5f;
+    color:#fff;
+    border-radius:20px;
+    text-decoration:none;
+    font-size:13px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:14px;
+    border-bottom:1px solid #e6e6e6;
+    text-align:left;
+}
+
+th{
+    background:#f4fbfa;
+    font-size:14px;
+}
+
+.badge{
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge.on{background:#d1fae5;color:#065f46;}
+.badge.off{background:#fee2e2;color:#991b1b;}
+
+.action-buttons{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.btn-edit{
+    padding:6px 16px;
+    border-radius:20px;
+    background:#114b5f;
+    color:#fff;
+    font-size:13px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.2s;
+}
+.btn-edit:hover{
+    background:#0d3c4a;
+}
+.btn-delete{
+    padding:6px 16px;
+    border-radius:20px;
+    background:#fee2e2;
+    color:#dc2626;
+    font-size:13px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn-delete:hover{
+    background:#fecaca;
+}
+</style>
+
+<div class="deals-card">
+    <h2>
+        🔥 Deals of the Day
+        <a href="{% url 'dashboard:add_deal' %}" class="add-btn">
+            + Add Deal
+        </a>
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Expiry</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for deal in deals %}
+            <tr>
+                <td><strong>{{ deal.product.name }}</strong></td>
+
+                <td>
+                    {% if deal.is_active %}
+                    <span class="status-badge status-active">ON</span>
+                 {% else %}
+                    <span class="status-badge status-inactive">OFF</span>
+                {% endif %}
+                    </td>
+
+                <td>
+                    {{ deal.expiry|date:"d M Y, H:i"|default:"—" }}
+                </td>
+                
+                <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'dashboard:edit_deal' deal.id %}" class="btn-edit">
+                            Edit
+                        </a>
+                        <a href="{% url 'dashboard:delete_deal' deal.id %}" class="btn-delete">
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;color:#666;">
+                    No deals found
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

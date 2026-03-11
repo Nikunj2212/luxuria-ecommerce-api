@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice | Luxuria</title>
+
+    <style>
+        body{
+            margin:0;
+            padding:40px;
+            background:#f3f4f6;
+            font-family:Arial, sans-serif;
+        }
+
+        .invoice-container{
+            max-width:900px;
+            margin:auto;
+            background:#ffffff;
+            padding:40px;
+            border-radius:12px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+        }
+
+        .brand{
+            font-size:28px;
+            font-weight:800;
+            letter-spacing:2px;
+        }
+
+        .meta{
+            text-align:right;
+            font-size:14px;
+            line-height:1.8;
+        }
+
+        .status{
+            padding:4px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+            background:#d1fae5;
+            color:#065f46;
+        }
+
+        .section-title{
+            margin-top:30px;
+            font-size:18px;
+            font-weight:700;
+            border-bottom:1px solid #eee;
+            padding-bottom:6px;
+        }
+
+        .customer-box{
+            background:#f9fafb;
+            padding:15px;
+            border-radius:8px;
+            line-height:1.8;
+            margin-top:10px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th{
+            background:#f3f4f6;
+            padding:12px;
+            text-align:left;
+            border-bottom:2px solid #ddd;
+        }
+
+        td{
+            padding:12px;
+            border-bottom:1px solid #eee;
+        }
+
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4){
+            text-align:right;
+        }
+
+        .total-box{
+            text-align:right;
+            margin-top:25px;
+            font-size:22px;
+            font-weight:800;
+        }
+
+        .footer{
+            margin-top:40px;
+            text-align:center;
+            font-size:14px;
+            color:#666;
+        }
+
+        .print-btn{
+            margin-top:30px;
+            text-align:right;
+        }
+
+        .print-btn button{
+            padding:10px 18px;
+            background:#114b5f;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        @media print{
+            body{background:white;}
+            .print-btn{display:none;}
+            .invoice-container{box-shadow:none;}
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="invoice-container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="brand">LUXURIA</div>
+        <div class="meta">
+            <strong>Order ID:</strong> {{ order.order_id }}<br>
+            <strong>Date:</strong> {{ order.created_at|date:"d M Y" }}<br>
+            <strong>Payment:</strong> {{ order.payment_method }}<br>
+            <strong>Status:</strong>
+            <span class="status">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+    </div>
+
+    <!-- CUSTOMER DETAILS -->
+    <div class="section-title">Customer Details</div>
+    <div class="customer-box">
+        <strong>{{ order.customer_name }}</strong><br>
+        Email: {{ order.customer_email }}<br>
+        Phone: {{ order.phone }}<br>
+        Address: {{ order.address }}, {{ order.city }} - {{ order.pincode }}
+    </div>
+
+    <!-- PRODUCT DETAILS -->
+    <div class="section-title">Product Details</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ item.price }}</td>
+                <td>₹{{ item.subtotal }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">No items found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- TOTAL -->
+    <div class="total-box">
+        Grand Total: ₹{{ order.total_amount }}
+    </div>
+
+    <!-- PRINT BUTTON -->
+    <div class="print-btn">
+        <button onclick="window.print()">Print / Download</button>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        Thank you for shopping with Luxuria ❤️<br>
+        support@luxuria.com | www.luxuria.com
+    </div>
+
+</div>
+
+</body>
+</html>

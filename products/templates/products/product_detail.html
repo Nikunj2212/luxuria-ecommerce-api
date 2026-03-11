@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ product.name }} | Luxuria{% endblock %}
+
+{% block content %}
+
+<style>
+body{ background:#f5f7fa; }
+
+/* 🔥 MAIN GRID LAYOUT */
+.product-layout{
+    width:100%;
+    padding:50px 6%;
+    display:grid;
+    grid-template-columns: 420px 1fr 340px;
+    gap:40px;
+    box-sizing:border-box;
+}
+
+.detail-wishlist-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding:12px 0;           /* same height */
+    border-radius:999px;      /* same shape */
+    font-weight:600;
+    font-size:15px;
+    text-decoration:none;
+    cursor:pointer;
+
+    background:#e5e7eb;       /* default grey */
+    color:#114b5f;
+    border:none;
+    margin-top:12px;
+}
+
+/* ❤️ Active (Red) */
+.detail-wishlist-btn.active{
+    background:#ff2d55;
+    color:#fff;
+}
+
+/* Icon spacing */
+.detail-wishlist-btn i{
+    font-size:15px;
+}
+
+.similar-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+/* ADD BUTTON */
+.btn-add{
+    padding:8px 18px;
+    border-radius:999px;
+    background:#134e5e;
+    color:#fff;
+    font-weight:600;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-add:hover{
+    background:#0d3c4a;
+}
+
+/* VIEW BUTTON */
+.btn-view{
+    padding:8px 18px;
+    border-radius:999px;
+    background:#d1d5db;
+    color:#1f2937;
+    font-weight:600;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-view:hover{
+    background:#d1d5db;
+}
+
+/* HEART BUTTON */
+.btn-heart{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#e5e7eb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-heart i{
+    color:#114b5f;
+    font-size:16px;
+}
+
+/* Active state */
+.btn-heart.active{
+    background:#ffe4e6;
+}
+
+.btn-heart.active i{
+    color:#ff2d55;
+}
+
+.similar .card h4 {
+    text-decoration: none;
+    color: #111;
+    font-weight: 600;
+}
+
+.similar .card a {
+    text-decoration: none;
+}
+
+/* LEFT IMAGE GALLERY */
+.gallery{
+    background:#fff;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+    text-align:center;
+}
+.gallery img{
+    width:100%;
+    max-height:420px;
+    object-fit:contain;
+}
+
+/* MIDDLE DETAILS */
+.product-details h1{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.price{
+    font-size:26px;
+    font-weight:800;
+    margin:12px 0;
+}
+.old-price{ text-decoration:line-through; color:#888; font-size:14px; }
+
+.rating{
+    color:#f59e0b;
+    margin-bottom:12px;
+}
+
+.features{
+    margin:20px 0;
+}
+.features li{ margin-bottom:6px; }
+
+/* RIGHT BUY BOX */
+.buy-box{
+    background:#fff;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+.buy-box h3{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.btn-primary{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:999px;
+    font-weight:600;
+    margin-top:12px;
+    cursor:pointer;
+}
+.avg-rating{
+    margin:10px 0;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.star{
+    color:#d1d5db;
+}
+.rating-number{
+    color:#f59e0b;
+    font-weight:600;
+    margin-left:6px;
+}
+
+.add-cart{ background:#0f766e; color:#fff; }
+.buy-now{ background:#000; color:#fff; }
+
+.stock{ color:#16a34a; font-weight:600; margin:8px 0; }
+
+/* 🔥 SIMILAR */
+.similar{
+    width:100%;
+    padding:60px 6%;
+}    
+.similar-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:25px;
+}    
+.card{
+background:#fff;
+padding:15px;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+text-align:center;
+}    
+
+/* REVIEWS SECTION */
+.review-section{
+    max-width:1200px;
+    margin:30px auto 60px;
+    padding:40px;
+    background:#fff;
+    border-radius:24px;
+    box-shadow:0 15px 50px rgba(0,0,0,.05);
+}    
+.qty-box{
+    margin:18px 0;
+}
+
+.qty-select{
+    width:140px;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.rating-stars{ font-size:30px; cursor:pointer; color:#ccc; }
+.star.filled{ color:gold; }
+
+
+.btn-buy-now {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s ease;
+}
+
+.btn-buy-now:hover {
+    background: #222;
+    transform: translateY(-2px);
+}
+
+</style>
+<div class="product-layout">
+
+    <!-- LEFT IMAGE -->
+    <div class="gallery">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+
+    <!-- MIDDLE DETAILS -->
+    <div class="product-details">
+        <h1>{{ product.name }}</h1>
+        
+        <div class="avg-rating">
+            {% if avg_rating > 0 %}
+                {% for i in "12345" %}
+                    {% if forloop.counter <= avg_rating %}
+                        <span class="star filled">★</span>
+                    {% else %}
+                        <span class="star">☆</span>
+                    {% endif %}
+                {% endfor %}
+                <span class="rating-number">({{ avg_rating }}/5)</span>
+            {% else %}
+                <span class="no-rating">No ratings yet</span>
+            {% endif %}
+        </div>
+
+
+        {% if deal and deal.is_active %}
+        <div class="price">
+            <span class="old-price">₹{{ product.price }}</span><br>
+            ₹{{ deal.discounted_price }}
+        </div>
+        {% else %}
+        <div class="price">₹{{ product.price }}</div>
+        {% endif %}
+
+        <ul class="features">
+            <li>✔ Premium build quality</li>
+            <li>✔ Latest generation performance</li>
+            <li>✔ High-resolution display</li>
+            <li>✔ Long-lasting battery life</li>
+        </ul>
+
+        {% if product.description %}
+        <p>{{ product.description|linebreaks }}</p>
+        {% endif %}
+    </div>
+
+    <!-- RIGHT BUY BOX -->
+        <div class="buy-box">
+            <h3>Buy this product</h3>
+            <div class="price">₹{{ product.price }}</div>
+            <div class="stock">In Stock</div>
+
+            <!-- Add to Cart -->
+            <form action="{% url 'carts:add_to_cart' product.id %}" method="GET">
+
+                <div class="qty-box">
+                    <label>Quantity:</label>
+                    <select name="qty" class="qty-select">
+                        {% for i in "123456789"|make_list %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary add-cart">
+                    Add to Cart
+                </button>
+            </form>
+
+            <!-- Buy Now -->
+            <form action="{% url 'carts:buy_now' product.id %}" method="GET">
+                <input type="hidden" name="qty" value="1">
+                <button type="submit" class="btn-buy-now">
+                    Buy Now
+                </button>
+            </form>
+
+        <a href="javascript:void(0);"
+           class="wishlist-btn detail-wishlist-btn {% if is_wishlisted %}active{% endif %}"
+           data-id="{{ product.id }}">
+        
+            <i class="fa {% if is_wishlisted %}fa-solid{% else %}fa-regular{% endif %} fa-heart"></i>
+        
+            {% if is_wishlisted %}
+                Added to Wishlist
+            {% else %}
+                Add to Wishlist
+            {% endif %}
+        </a>
+                
+        
+        <p style="margin-top:12px;font-size:14px;color:#555;">
+            Free delivery • Secure payment • Easy returns
+        </p>
+    </div>
+
+</div>
+
+<!-- SIMILAR PRODUCTS -->
+<div class="similar">
+    <h2>You May Also Like</h2>
+    <div class="similar-grid">
+        {% for item in similar_products %}
+        <div class="card">
+            <a href="{% url 'products:product_detail' item.id %}">
+                <img src="{{ item.image.url }}" style="width:100%;height:150px;object-fit:contain;">
+                <h4>{{ item.name|truncatechars:40 }}</h4>
+            </a>
+            <p>₹{{ item.price }}</p>
+            <div class="similar-actions">
+
+    <a href="javascript:void(0);"
+       class="btn-add add-to-cart-btn"
+       data-id="{{ item.id }}">
+        Add
+    </a>
+
+    <a href="{% url 'products:product_detail' item.id %}"
+       class="btn-view">
+        View
+    </a>
+
+    <a href="javascript:void(0);"
+       class="wishlist-btn btn-heart"
+       data-id="{{ item.id }}">
+        <i class="fa-regular fa-heart"></i>
+    </a>
+
+</div>
+    <!-- Add to Cart -->
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- ⭐⭐⭐⭐⭐ REVIEWS & RATINGS SECTION -->
+<!-- ⭐⭐⭐⭐⭐ REVIEWS & RATINGS SECTION -->
+<div style="width:100%;padding:40px 6%;background:#fff;">
+    <!-- ⭐ Average Rating -->
+    <h2 style="margin-bottom:15px;">Customer Ratings</h2>
+
+{% if avg_rating > 0 %}    
+    {% for i in "12345" %}
+        {% if forloop.counter <= avg_rating %}
+            ⭐
+        {% else %}    
+            ☆
+        {% endif %}    
+    {% endfor %}    
+    ({{ avg_rating }}/5)
+{% else %}    
+    No ratings yet
+{% endif %}    
+
+
+    <hr style="margin:30px 0;">
+
+    <!-- ✍ Review Form -->
+    <h3>Write a Review</h3>
+
+    {% if user.is_authenticated %}
+    <form method="POST" action="{% url 'products:add_review' product.id %}" style="margin-bottom:30px;">
+        {% csrf_token %}
+        <div class="rating-stars">
+    <input type="hidden" name="rating" id="rating-value" required>        
+
+    <span class="star" data-value="1">&#9734;</span>
+    <span class="star" data-value="2">&#9734;</span>
+    <span class="star" data-value="3">&#9734;</span>
+    <span class="star" data-value="4">&#9734;</span>
+    <span class="star" data-value="5">&#9734;</span>
+</div>    
+
+
+        <label>Your Review:</label><br>
+        <textarea name="review" rows="3" required style="width:100%;padding:10px;border-radius:8px;"></textarea><br><br>
+
+        <button type="submit" style="background:#000;color:#fff;padding:10px 24px;border-radius:999px;border:none;">
+            Submit Review
+        </button>    
+    </form>    
+    {% else %}
+        <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
+    {% endif %}    
+
+    <hr style="margin:30px 0;">
+
+    <!-- 🗣 Reviews List -->
+    <h3>Customer Feedback</h3>
+
+    {% for review in product.reviews.all %}
+        <div style="border-bottom:1px solid #eee;padding:15px 0;">
+            <strong>{{ review.user.username }}</strong>
+            <span>— ⭐ {{ review.rating }}</span>
+            <p style="margin:5px 0;">{{ review.review }}</p>
+            <small style="color:#777;">{{ review.created_at|date:"d M Y" }}</small>
+        </div>    
+    {% empty %}    
+        <p>No reviews yet. Be the first!</p>
+    {% endfor %}    
+
+</div>    
+<!-- ⭐⭐⭐⭐⭐ END -->
+
+<script>
+const stars = document.querySelectorAll('.star');    
+const ratingInput = document.getElementById('rating-value');
+
+stars.forEach(star => {
+    star.addEventListener('click', function () {
+        let rating = this.getAttribute('data-value');
+        ratingInput.value = rating;
+
+        stars.forEach(s => {
+            s.classList.remove('filled');
+            if (s.getAttribute('data-value') <= rating) {
+                s.classList.add('filled');
+                s.innerHTML = "★";
+            } else {
+                s.innerHTML = "☆";
+            }    
+        });    
+    });    
+});    
+</script>
+
+
+{% endblock %}
+
+
+

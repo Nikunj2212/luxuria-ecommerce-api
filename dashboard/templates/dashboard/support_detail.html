@@ -1,0 +1,170 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Support Ticket{% endblock %}
+{% block content %}
+
+<style>
+/* ===== MAIN CARD ===== */
+.chat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 850px;
+    padding: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+/* ===== HEADER ===== */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.chat-header h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #0F5C4B;
+}
+
+.user-name {
+    font-size: 14px;
+    color: #555;
+}
+
+/* ===== CHAT BODY ===== */
+.chat-body {
+    background: #f6fbfa;
+    border-radius: 14px;
+    padding: 16px;
+    height: 360px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+/* ===== MESSAGE COMMON ===== */
+.msg {
+    max-width: 70%;
+    padding: 12px 14px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+}
+
+/* USER (LEFT) */
+.msg-user {
+    background: #e3f6f1;
+    align-self: flex-start;
+    border-top-left-radius: 4px;
+}
+
+/* ADMIN (RIGHT) */
+.msg-admin {
+    background: #e8f0ff;
+    margin-left: auto;
+    border-top-right-radius: 4px;
+    text-align: right;
+}
+
+/* TIME */
+.msg-time {
+    font-size: 11px;
+    color: #777;
+    margin-top: 4px;
+}
+
+/* ===== REPLY BOX ===== */
+.reply-box textarea {
+    width: 90%;
+    height: 90px;
+    resize: none;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.reply-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* SEND BUTTON */
+.send-btn {
+    background: #0F5C4B;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+    background: #e53935;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* CLOSED NOTICE */
+.closed-text {
+    color: #e53935;
+    font-weight: 600;
+    margin-top: 10px;
+}
+</style>
+
+<div class="chat-card">
+
+    <!-- HEADER -->
+    <div class="chat-header">
+        <div>
+            <h2>🎧 Support Query</h2>
+            <div class="user-name">User: {{ thread.user.username }}</div>
+        </div>
+
+        {% if thread.status != "closed" %}
+        <form method="post" action="{% url 'dashboard:dashboard_support_close' thread.id %}">
+            {% csrf_token %}
+            <button class="close-btn">✖ Close Ticket</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- CHAT BODY -->
+    <div class="chat-body">
+        {% for m in messages %}
+            <div class="msg {% if m.sender == 'admin' %}msg-admin{% else %}msg-user{% endif %}">
+                {{ m.message }}
+                <div class="msg-time">
+                    {{ m.created_at|date:"d M Y h:i A" }}
+                </div>
+            </div>
+        {% empty %}
+            <p>No messages yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- REPLY -->
+    {% if thread.status == "closed" %}
+        <p class="closed-text">🚫 This ticket is closed. You cannot reply.</p>
+    {% else %}
+        <form method="POST" class="reply-box">
+            {% csrf_token %}
+            <textarea name="message" placeholder="Type your reply here..." required></textarea>
+
+            <div class="reply-actions">
+                <button type="submit" class="send-btn">Send Reply</button>
+            </div>
+        </form>
+    {% endif %}
+
+</div>
+
+{% endblock %}

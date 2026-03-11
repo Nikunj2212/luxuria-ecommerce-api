@@ -1,0 +1,54 @@
+{% extends "dashboard/base_old.html" %}
+
+{% block title %}Contact Messages{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom:20px;">Support Tickets</h2>
+
+<table width="100%" cellpadding="10" style="background:white;border-radius:8px;">
+    <thead style="background:#0f4d3f;color:white;">
+        <tr>
+            <th>#</th>
+            <th>Subject</th>
+            <th>User</th>
+            <th>Last Message</th>
+            <th>Date</th>
+            <th>View</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% if threads %}
+            {% for thread in threads %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ thread.subject }}</td>
+                <td>
+                    {% if thread.user %}
+                        {{ thread.user.username }}
+                    {% else %}
+                        Guest User
+                    {% endif %}
+                </td>
+                <td>{{ thread.messages.last.message|truncatechars:40 }}</td>
+                <td>{{ thread.created_at }}</td>
+
+                <td>
+                    <a href="{% url 'dashboard:admin_support_detail' thread.id %}"
+                       style="background:#0f4d3f;color:white;padding:6px 10px;border-radius:5px;text-decoration:none;">
+                       View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;padding:20px;">
+                    No support tickets yet.
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}

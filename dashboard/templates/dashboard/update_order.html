@@ -1,0 +1,151 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Update Order{% endblock %}
+
+{% block content %}
+
+<div class="order-wrapper">
+
+    <div class="order-card">
+
+        <h2 class="card-title">
+            📦 Update Order Status
+        </h2>
+
+        <div class="order-info">
+            <p><strong>Order ID:</strong> <span>{{ order.order_id }}</span></p>
+            <p><strong>Customer:</strong> {{ order.user.username }}</p>
+            <p><strong>Total:</strong> ₹{{ order.total_amount }}</p>
+            <p>
+                <strong>Current Status:</strong>
+                <span class="status-badge {{ order.status|lower }}">
+                    {{ order.status }}
+                </span>
+            </p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label><strong>Change Status</strong></label>
+            <select name="status" required>
+                <option value="PENDING" {% if order.status == "PENDING" %}selected{% endif %}>Pending</option>
+                <option value="PROCESSING" {% if order.status == "PROCESSING" %}selected{% endif %}>Processing</option>
+                <option value="DISPATCHED" {% if order.status == "DISPATCHED" %}selected{% endif %}>Dispatched</option>
+                <option value="DELIVERED" {% if order.status == "DELIVERED" %}selected{% endif %}>Delivered</option>
+                <option value="CANCELLED" {% if order.status == "CANCELLED" %}selected{% endif %}>Cancelled</option>
+            </select>
+            
+            <button type="submit" class="update-btn">
+                Update Status
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+.order-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding-top:40px;
+}
+
+.order-card{
+    background:#ffffff;
+    width:600px;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.1);
+}
+
+.card-title{
+    font-size:24px;
+    font-weight:700;
+    margin-bottom:25px;
+    color:#0f172a;
+}
+
+.order-info p{
+    margin-bottom:10px;
+    font-size:15px;
+    color:#374151;
+}
+
+.order-info span{
+    font-family:monospace;
+}
+
+/* STATUS BADGES */
+.status-badge{
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.status-badge.processing{
+    background:#e0f2fe;
+    color:#075985;
+}
+
+.status-badge.dispatched{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-badge.delivered{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status-badge.cancelled{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.field-label{
+    display:block;
+    margin-top:25px;
+    margin-bottom:8px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.status-select{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+    background:#f9fafb;
+    font-size:15px;
+}
+
+.status-select:focus{
+    outline:none;
+    border-color:#0f766e;
+    background:#fff;
+}
+
+.update-btn{
+    margin-top:25px;
+    width:100%;
+    padding:14px;
+    background:#0f766e;
+    color:white;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.update-btn:hover{
+    background:#115e59;
+}
+</style>
+
+{% endblock %}
+
+

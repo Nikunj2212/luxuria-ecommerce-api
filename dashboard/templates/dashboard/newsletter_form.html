@@ -1,0 +1,16 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Send Newsletter{% endblock %}
+{% block content %}
+
+<h2>Newsletter Broadcast</h2>
+
+<form method="POST">
+{% csrf_token %}
+<textarea name="content" rows="8" style="width:100%;" required></textarea>
+<br><br>
+<button type="submit" style="padding:10px 16px;background:#111;color:#fff;border-radius:6px;">
+    Send Newsletter
+</button>
+</form>
+
+{% endblock %}

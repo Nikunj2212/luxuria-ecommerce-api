@@ -1,0 +1,155 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Support Tickets{% endblock %}
+{% block content %}
+
+<style>
+.table-wrapper {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.15);
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+.table-wrapper th {
+    background: #0F5C4B;
+    color: white;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table-wrapper tr:hover {
+    background: #f3fbf8;
+}
+
+/* STATUS */
+.status-open {
+    color: #ff9800;
+    font-weight: 600;
+}
+
+.status-replied {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.status-closed {
+    color: #e53935;
+    font-weight: 600;
+}
+
+/* ACTION BUTTONS */
+.action-wrap {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    min-width: 72px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* OPEN */
+.btn-open {
+    background: #0F5C4B;
+    color: #fff;
+}
+.btn-open:hover {
+    background: #0a3e33;
+}
+
+/* DELETE */
+.btn-delete {
+    background: #e53935;
+    color: #fff;
+}
+.btn-delete:hover {
+    background: #c62828;
+}
+</style>
+
+<h2>🎧 Support Tickets</h2>
+
+<div class="table-wrapper">
+{% if threads %}
+<table>
+    <tr>
+        <th>User</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+
+    {% for t in threads %}
+    <tr>
+        <td>
+            {% if t.user %}
+                {{ t.user.username }}
+            {% else %}
+                {{ t.guest_name }} (Guest)
+            {% endif %}
+        </td>
+
+        <td>{{ t.subject }}</td>
+
+        <!-- ✅ CORRECT STATUS LOGIC -->
+        <td>
+            {% if t.status == "open" %}
+                <span class="status-open">Open</span>
+            {% elif t.status == "closed" %}
+                <span class="status-closed">Closed</span>
+            {% else %}
+                <span class="status-replied">Replied</span>
+            {% endif %}
+        </td>
+
+        <td>{{ t.created_at|date:"d M Y h:i A" }}</td>
+
+        <td>
+            <div class="action-wrap">
+                <a href="{% url 'dashboard:dashboard_support_detail' t.id %}"
+                   class="action-btn btn-open">
+                    Open
+                </a>
+
+                <form method="post"
+                      action="{% url 'dashboard:dashboard_support_delete' t.id %}"
+                      onsubmit="return confirm('⚠️ Delete this ticket permanently?');">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="action-btn btn-delete">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p>No Support Requests yet.</p>
+{% endif %}
+</div>
+
+{% endblock %}

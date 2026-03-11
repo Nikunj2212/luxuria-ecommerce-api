@@ -1,0 +1,190 @@
+{% extends "accounts/base_account.html" %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block account_content %}
+
+<style>
+
+/* ===== HERO WRAPPER ===== */
+.wishlist-hero{
+    background:linear-gradient(135deg,#0f172a,#064e3b);
+    border-radius:30px;
+    padding:50px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Decorative Glow */
+.wishlist-hero::after{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    background:rgba(20,184,166,0.15);
+    border-radius:50%;
+    top:-150px;
+    right:-150px;
+}
+
+/* HEADER */
+.wishlist-header{
+    margin-bottom:30px;
+}
+
+.wishlist-header h2{
+    font-size:26px;
+    margin-bottom:5px;
+}
+
+.wishlist-header p{
+    opacity:.8;
+    font-size:14px;
+}
+
+/* GRID */
+.wishlist-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:25px;
+}
+
+/* PRODUCT CARD */
+.product-card{
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:18px;
+    transition:.3s;
+    display:flex;
+    flex-direction:column;
+}
+
+.product-card:hover{
+    transform:translateY(-5px);
+    background:rgba(255,255,255,0.09);
+}
+
+/* IMAGE */
+.product-card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:14px;
+    margin-bottom:15px;
+}
+
+/* TITLE */
+.product-title{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+/* PRICE */
+.product-price{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:12px;
+}
+
+/* BUTTONS */
+.btn-group{
+    margin-top:auto;
+    display:flex;
+    gap:10px;
+}
+
+.add-btn{
+    flex:1;
+    padding:8px 12px;
+    border:none;
+    border-radius:18px;
+    font-size:13px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#14b8a6,#0f766e);
+    color:white;
+    transition:.3s;
+}
+
+.add-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(20,184,166,0.4);
+}
+
+.remove-btn{
+    padding:8px 12px;
+    border:none;
+    border-radius:18px;
+    font-size:13px;
+    cursor:pointer;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    transition:.3s;
+}
+
+.remove-btn:hover{
+    background:rgba(255,255,255,0.25);
+}
+
+/* EMPTY STATE */
+.empty-state{
+    text-align:center;
+    padding:50px 0;
+    opacity:.8;
+}
+
+</style>
+
+<div class="wishlist-hero">
+
+    <div class="wishlist-header">
+        <h2>❤️ My Wishlist</h2>
+        <p>Your saved products for later</p>
+    </div>
+
+    {% if wishlist_products %}
+
+    <div class="wishlist-grid">
+        {% for product in wishlist_products %}
+            <div class="product-card">
+
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+
+                <div class="product-title">
+                    {{ product.name }}
+                </div>
+
+                <div class="product-price">
+                    ₹{{ product.price }}
+                </div>
+
+                <div class="btn-group">
+
+                    <a href="{% url 'products:product_detail' product.id %}"
+                       class="add-btn"
+                       style="text-align:center;text-decoration:none;">
+                       View
+                    </a>
+
+                    <button class="remove-btn wishlist-btn"
+                            data-id="{{ product.id }}">
+                        Remove
+                    </button>
+
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+        <div class="empty-state">
+            😔 Your wishlist is empty.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

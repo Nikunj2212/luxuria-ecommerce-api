@@ -1,0 +1,11 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+<h2>Edit Offer</h2>
+
+<form method="post">{% csrf_token %}
+  <input type="text" name="name" value="{{ offer.name }}" required><br>
+  <input type="number" name="discount" value="{{ offer.discount }}" required><br>
+  <label><input type="checkbox" name="active" {% if offer.active %}checked{% endif %}> Active</label><br>
+  <button type="submit">Update</button>
+</form>
+{% endblock %}

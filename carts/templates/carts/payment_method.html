@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Payment | Luxuria{% endblock %}
+{% block content %}
+
+<style>
+.payment-box{
+    max-width:850px;
+    margin:50px auto;
+    background:#fff;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 15px 45px rgba(0,0,0,.08);
+}
+
+.payment-title{
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.total-text{
+    font-size:20px;
+    margin-bottom:30px;
+    color:#114b5f;
+    font-weight:700;
+}
+
+.method-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:18px;
+}
+
+.method-card{
+    border:2px solid #eee;
+    border-radius:14px;
+    padding:18px;
+    cursor:pointer;
+    transition:.25s;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:600;
+}
+
+.method-card:hover{
+    border-color:#114b5f;
+    transform:translateY(-3px);
+}
+
+.method-card input{
+    transform:scale(1.2);
+}
+
+.pay-btn{
+    width:100%;
+    margin-top:30px;
+    padding:16px;
+    background:#ffd814;
+    border:none;
+    border-radius:10px;
+    font-weight:700;
+    font-size:17px;
+    cursor:pointer;
+}
+.pay-btn:hover{background:#f7ca00;}
+</style>
+
+<div class="payment-box">
+    <div class="payment-title">Select Payment Method</div>
+    <div class="total-text">Order Total: ₹{{ total }}</div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="method-grid">
+
+            <label class="method-card">
+                <input type="radio" name="method" value="COD" required>
+                💵 Cash on Delivery
+            </label>
+
+            <label class="method-card">
+                <input type="radio" name="method" value="CARD">
+                💳 Credit / Debit Card
+            </label>
+
+            <label class="method-card">
+                <input type="radio" name="method" value="UPI">
+                📱 UPI Payment
+            </label>
+
+            <label class="method-card">
+                <input type="radio" name="method" value="NET">
+                🏦 Net Banking
+            </label>
+
+        </div>
+
+        <button class="pay-btn">Continue</button>
+    </form>
+</div>
+
+{% endblock %}

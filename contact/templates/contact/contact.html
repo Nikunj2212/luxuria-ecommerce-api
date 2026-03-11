@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us | Luxuria{% endblock %}
+
+{% block content %}
+<style>
+.contact-box {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #e8f7f4;
+    border-radius: 12px;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+}
+.contact-box h2 {
+    color: #13493f;
+    margin-bottom: 20px;
+}
+.contact-box input,
+.contact-box textarea {
+    width: 100%;
+    border: 1px solid #8ccdc1;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 8px 0 15px;
+    font-size: 16px;
+}
+.contact-box button {
+    width: 100%;
+    background: #13493f;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+}
+.contact-box button:hover {
+    background: #0c372f;
+}
+</style>
+
+<div class="contact-box">
+    <h2>Contact & Support</h2>
+
+    <form method="POST" action="{% url 'contact_page' %}">
+        {% csrf_token %}
+
+        {% if not request.user.is_authenticated %}
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+
+        <label>Your Email</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        {% endif %}
+
+        <label>Your Message</label>
+        <textarea name="message" rows="5"
+         placeholder="Write your message here..." required></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+</div>
+
+{% endblock %}

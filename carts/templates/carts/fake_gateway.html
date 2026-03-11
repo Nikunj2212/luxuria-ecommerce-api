@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}Secure Payment | Luxuria{% endblock %}
+{% block content %}
+
+<style>
+/* same CSS — unchanged */
+.gateway-box{
+    max-width:480px;
+    margin:50px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+.method-badge{
+    background:#114b5f;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:6px;
+    font-size:13px;
+    display:inline-block;
+    margin-bottom:10px;
+}
+.card-preview{
+    background:linear-gradient(135deg,#0f2027,#2c5364);
+    color:#fff;
+    padding:20px;
+    border-radius:14px;
+    margin-bottom:20px;
+    height:160px;position:relative;
+    transition:.4s;
+}
+.card-number{
+    font-size:18px;
+    letter-spacing:2px;
+    margin-top:30px;
+}
+.card-name,.card-expiry{
+    font-size:13px;
+    margin-top:15px;
+}
+input,select{
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    border-radius:8px;
+    border:1px solid #ddd;
+}
+.pay-btn{
+    width:100%;
+    padding:14px;
+    background:#ffd814;border:none;
+    border-radius:10px;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+}
+.loader{
+    display:none;
+    text-align:center;
+    margin-top:15px;
+    font-weight:600;
+    color:#114b5f;
+}
+.secure-text{
+    text-align:center;
+    font-size:13px;
+    margin-top:10px;
+    color:#666;
+}
+.qr{
+    text-align:center;
+    margin-bottom:15px;
+}
+.badges{
+    text-align:center;
+    margin-top:10px;
+}
+.badges img{
+    height:26px;
+    margin:0 6px;
+}
+</style>
+
+<div class="gateway-box">
+
+<h2>🔒 Secure Payment</h2>
+<span class="method-badge">{{ method }}</span>
+<p><b>Amount:</b> ₹{{ total }}</p>
+
+{% if method == "CARD" %}
+
+<div class="card-preview">
+    <div class="card-number" id="previewNumber">**** **** **** ****</div>
+    <div class="card-name" id="previewName">CARD HOLDER</div>
+    <div class="card-expiry" id="previewExpiry">MM/YY</div>
+</div>
+
+<form method="POST" action="{% url 'carts:process_payment' %}" onsubmit="showLoader()">
+    {% csrf_token %}
+    <input type="text" id="cardNumber" placeholder="Card Number" maxlength="19" required>
+    <input type="text" id="cardName" placeholder="Card Holder Name" required>
+    <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
+    <input type="text" id="cvv" placeholder="CVV" maxlength="3" required>
+    <button class="pay-btn" type="submit">Pay ₹{{ total }}</button>
+</form>
+
+{% elif method == "UPI" %}
+
+<div class="qr">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=luxuria@upi&pn=Luxuria&am={{ total }}" />
+</div>
+
+<form method="POST" action="{% url 'carts:process_payment' %}" onsubmit="showLoader()">
+    {% csrf_token %}
+    <input type="text" placeholder="Enter UPI ID (name@upi)" required>
+    <button class="pay-btn" type="submit">Pay ₹{{ total }}</button>
+</form>
+
+{% elif method == "NET" %}
+
+<form method="POST" action="{% url 'carts:process_payment' %}" onsubmit="showLoader()">
+    {% csrf_token %}
+    <select required>
+        <option value="">Select Bank</option>
+        <option>SBI</option>
+        <option>HDFC</option>
+        <option>ICICI</option>
+        <option>Axis Bank</option>
+    </select>
+    <input type="text" placeholder="User ID" required>
+    <input type="password" placeholder="Password" required>
+    <button class="pay-btn" type="submit">Login & Pay</button>
+</form>
+
+{% else %}
+
+<form method="POST" action="{% url 'carts:process_payment' %}" onsubmit="showLoader()">
+    {% csrf_token %}
+    <button class="pay-btn" type="submit">Confirm Cash on Delivery</button>
+</form>
+
+{% endif %}
+
+<div class="loader" id="loader">⏳ Processing Payment...</div>
+
+<div class="badges">
+<img src="https://i.imgur.com/4V4YV8D.png">
+<img src="https://i.imgur.com/8kmFh6s.png">
+</div>
+
+<div class="secure-text">Your transaction is encrypted & secured by Luxuria</div>
+</div>
+
+<script>
+function showLoader(){ document.getElementById("loader").style.display="block"; }
+</script>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Ticket: {{ thread.subject }}{% endblock %}
+
+{% block content %}
+<style>
+.thread-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.15);
+}
+.message {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+}
+.user-msg {
+    background: #e8f8f5;
+}
+.admin-msg {
+    background: #dff1ff;
+}
+.reply-box textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #bbb;
+}
+.reply-box button {
+    margin-top: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #0F5C4B;
+    cursor: pointer;
+    color: white;
+}
+.reply-box button:hover {
+    background: #0a3e33;
+}
+.close-btn {
+    background:#e63946;
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    text-decoration:none;
+    display:inline-block;
+    margin-bottom:15px;
+}
+</style>
+
+<h2>📩 Ticket: {{ thread.subject }}</h2>
+
+<div class="thread-box">
+    <p><strong>User:</strong> {% if thread.user %}{{ thread.user.username }}{% else %}{{ thread.guest_name }} (Guest){% endif %}</p>
+
+    <!-- Close button -->
+     {% if thread.status == 'open' %}
+    <a href="{% url 'dashboard:dashboard_support_close' thread.id %}" class="close-btn">
+        ❌ Close Ticket
+    </a>
+    {% else %}
+    <p style="color:red;font-weight:bold;">🚫 Ticket is Closed</p>
+    {% endif %}
+    
+
+
+
+    <h4>Conversation</h4>
+    {% for msg in messages %}
+        <div class="message {% if msg.sender == 'admin' %}admin-msg{% else %}user-msg{% endif %}">
+            <strong>{{ msg.sender|title }}:</strong><br>
+            {{ msg.message }} <br>
+            <small style="color:#555;">{{ msg.created_at|date:"M d, Y h:i A" }}</small>
+        </div>
+    {% endfor %}
+
+    <form method="post" class="reply-box">{% csrf_token %}
+        <textarea name="reply" placeholder="Write your reply..." required></textarea>
+        <button type="submit">Send Reply</button>
+    </form>
+
+</div>
+
+{% endblock %}

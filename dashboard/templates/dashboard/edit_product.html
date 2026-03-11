@@ -1,0 +1,111 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+
+<style>
+.form-wrapper {
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.form-wrapper h2 {
+    font-size: 24px;
+    margin-bottom: 22px;
+    color: #2c5a4c;
+}
+.form-group { margin-bottom: 18px; }
+input, select, textarea {
+    width: 90%;
+    padding: 14px;
+    border: 1px solid #aaccc2;
+    border-radius: 10px;
+    font-size: 15px;
+}
+textarea { height: 110px; resize: none; }
+button {
+    padding: 12px 20px;
+    background: #317f6f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+button:hover { opacity: .9; }
+</style>
+
+<div class="form-wrapper">
+    <h2>Edit Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <input type="text" name="name" value="{{ product.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <input type="number" name="price" value="{{ product.price }}" required>
+        </div>
+
+        <div class="form-group">
+            <textarea name="description">{{ product.description }}</textarea>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="form-group">
+            <select name="category" id="id_category" required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}"
+                        {% if product.category.id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- SUBCATEGORY -->
+        <div class="form-group">
+            <select name="subcategory" id="id_subcategory">
+                <option value="">Select subcategory</option>
+                {% for s in subcategories %}
+                    <option value="{{ s.id }}"
+                        {% if product.subcategory and product.subcategory.id == s.id %}selected{% endif %}>
+                        {{ s.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="file" name="image">
+        </div>
+
+        <button type="submit">Update Product</button>
+    </form>
+</div>
+
+<!-- AJAX SUBCATEGORY LOADER -->
+<script>
+document.getElementById("id_category").addEventListener("change", function() {
+    let catId = this.value;
+    let subDropdown = document.getElementById("id_subcategory");
+
+    subDropdown.innerHTML = "<option>Loading...</option>";
+
+    fetch(`/products/load-subcategories/?category_id=${catId}`)
+        .then(res => res.json())
+        .then(data => {
+            subDropdown.innerHTML = "<option value=''>Select subcategory</option>";
+            data.forEach(item => {
+                subDropdown.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+            });
+        });
+});
+</script>
+
+{% endblock %}

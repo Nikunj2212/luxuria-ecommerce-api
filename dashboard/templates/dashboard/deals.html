@@ -1,0 +1,49 @@
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<div style="max-width:1200px;margin:40px auto;background:#fff;
+padding:30px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.08)">
+
+<h2 style="margin-bottom:25px;color:#114b5f;">🔥 Deals of the Day (Direct Control)</h2>
+
+<table width="100%" cellpadding="12" style="border-collapse:collapse;">
+<tr style="background:#f4fbfa;">
+  <th align="left">Product</th>
+  <th>Status</th>
+  <th>Expiry</th>
+  <th>Save</th>
+</tr>
+
+{% for p in products %}
+<form method="post">
+{% csrf_token %}
+<tr style="border-bottom:1px solid #eee;">
+  <td>
+    <strong>{{ p.name }}</strong>
+    <input type="hidden" name="product_id" value="{{ p.id }}">
+  </td>
+
+  <td align="center">
+    <input type="checkbox" name="is_deal" {% if p.is_deal %}checked{% endif %}>
+  </td>
+
+  <td align="center">
+    <input type="datetime-local" name="deal_expiry"
+      value="{% if p.deal_expiry %}{{ p.deal_expiry|date:'Y-m-d\\TH:i' }}{% endif %}">
+  </td>
+
+  <td align="center">
+    <button type="submit"
+      style="padding:6px 14px;border:none;border-radius:20px;
+      background:#114b5f;color:white;cursor:pointer;">
+      Save
+    </button>
+  </td>
+</tr>
+</form>
+{% endfor %}
+</table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+<h1 style="color:red;">🔥 SUPPORT LIST TEMPLATE ACTIVE 🔥</h1>
+{% extends "dashboard/base_old.html" %}
+{% block content %}
+
+<h2>Support Tickets</h2>
+
+{% if threads %}
+<table width="100%" cellpadding="8">
+    <tr>
+        <th>#</th>
+        <th>Subject</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+
+    {% for t in threads %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ t.subject }}</td>
+
+        <td>
+            {% if t.user %}
+                {{ t.user.username }}
+            {% else %}
+                {{ t.guest_name }} (Guest)
+            {% endif %}
+        </td>
+
+        <td>
+            {% if t.status == 'open' %}
+                <span style="color:orange;font-weight:bold;">Open</span>
+            {% elif t.status == 'replied' %}
+                <span style="color:green;font-weight:bold;">Replied</span>
+            {% else %}
+                <span style="color:red;font-weight:bold;">Closed</span>
+            {% endif %}
+        </td>
+
+        <td>{{ t.created_at|date:"d M Y H:i" }}</td>
+
+        <td>
+            <a href="{% url 'dashboard:dashboard_support_detail' t.id %}"
+               style="padding:4px 10px;background:#0f5c4b;color:white;
+                      border-radius:6px;text-decoration:none;">
+                Open
+            </a>
+
+            <a href="{% url 'dashboard:dashboard_support_delete' t.id %}"
+               onclick="return confirm('Are you sure you want to DELETE this ticket?');"
+               style="padding:4px 10px;background:#e63946;color:white;
+                      border-radius:6px;text-decoration:none;margin-left:6px;">
+                Delete
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<p>No support tickets yet.</p>
+{% endif %}
+
+{% endblock %}

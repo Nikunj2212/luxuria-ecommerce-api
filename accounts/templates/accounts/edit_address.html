@@ -1,0 +1,238 @@
+{% extends "accounts/base_account.html" %}
+{% block title %}Edit Profile & Address | Luxuria{% endblock %}
+
+{% block account_content %}
+
+<style>
+
+/* ===== MAIN WRAPPER ===== */
+.edit-hero{
+    background:linear-gradient(135deg,#0f172a,#064e3b);
+    border-radius:30px;
+    padding:50px;
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Decorative Glow Circle */
+.edit-hero::after{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    background:rgba(20,184,166,0.15);
+    border-radius:50%;
+    top:-150px;
+    right:-150px;
+}
+
+/* ===== HEADER ===== */
+.edit-header{
+    margin-bottom:40px;
+}
+
+.edit-header h2{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.edit-header p{
+    opacity:.8;
+    font-size:14px;
+}
+
+/* ===== GLASS CARD ===== */
+.glass-card{
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:22px;
+    padding:30px;
+    margin-bottom:30px;
+}
+
+/* Section Title */
+.section-title{
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.5px;
+    margin-bottom:20px;
+    opacity:.9;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+.field.full{
+    grid-column:1 / -1;
+}
+
+label{
+    font-size:12px;
+    margin-bottom:6px;
+    opacity:.8;
+}
+
+/* INPUT STYLE */
+input{
+    height:48px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.08);
+    color:white;
+    padding:0 16px;
+    font-size:14px;
+    transition:.3s;
+}
+
+input::placeholder{
+    color:rgba(255,255,255,0.5);
+}
+
+input:focus{
+    outline:none;
+    border-color:#14b8a6;
+    box-shadow:0 0 0 4px rgba(20,184,166,0.2);
+    background:rgba(255,255,255,0.12);
+}
+
+/* BUTTON */
+.save-btn{
+    margin-top:20px;
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg,#14b8a6,#0f766e);
+    color:white;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 10px 25px rgba(20,184,166,0.35);
+}
+
+.save-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 35px rgba(20,184,166,0.5);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+    .edit-hero{
+        padding:30px;
+    }
+}
+
+</style>
+
+<div class="edit-hero">
+
+    <div class="edit-header">
+        <h2>✏ Edit Profile & Address</h2>
+        <p>Update your information for smooth delivery experience</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- PROFILE SECTION -->
+        <div class="glass-card">
+            <div class="section-title">PROFILE INFORMATION</div>
+
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text"
+                       name="username"
+                       value="{{ request.user.username }}"
+                       required>
+            </div>
+        </div>
+
+        <!-- ADDRESS SECTION -->
+        <div class="glass-card">
+            <div class="section-title">DELIVERY ADDRESS</div>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>House No</label>
+                    <input type="text"
+                           name="house_no"
+                           value="{{ address.house_no|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label>Landmark</label>
+                    <input type="text"
+                           name="landmark"
+                           value="{{ address.landmark|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field full">
+                    <label>Address Line</label>
+                    <input type="text"
+                           name="address_line1"
+                           value="{{ address.address_line1|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label>Area</label>
+                    <input type="text"
+                           name="area"
+                           value="{{ address.area|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label>City</label>
+                    <input type="text"
+                           name="city"
+                           value="{{ address.city|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label>State</label>
+                    <input type="text"
+                           name="state"
+                           value="{{ address.state|default:'' }}"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label>Pincode</label>
+                    <input type="text"
+                           name="pincode"
+                           value="{{ address.pincode|default:'' }}"
+                           required>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit" class="save-btn">
+            Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

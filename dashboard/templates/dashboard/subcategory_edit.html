@@ -1,0 +1,88 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Edit Subcategory{% endblock %}
+
+{% block content %}
+
+<style>
+.form-wrapper {
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.form-wrapper h2 {
+    font-size: 24px;
+    margin-bottom: 22px;
+    color: #2c5a4c;
+}
+.form-group { margin-bottom: 18px; }
+
+input, select {
+    width: 90%;
+    padding: 14px;
+    border: 1px solid #aaccc2;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+button {
+    padding: 12px 18px;
+    background: #317f6f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+button:hover { opacity: .9; }
+
+.sub-img {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #aaccc2;
+}
+</style>
+
+<div class="form-wrapper">
+    <h2>Edit Subcategory</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- EXISTING IMAGE -->
+        {% if subcategory.image %}
+            <img src="{{ subcategory.image.url }}" class="sub-img">
+        {% endif %}
+
+        <!-- CHANGE IMAGE -->
+        <div class="form-group">
+            <input type="file" name="image">
+        </div>
+
+        <!-- CATEGORY SELECT -->
+        <div class="form-group">
+            <select name="category" required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}"
+                        {% if subcategory.category.id == category.id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- SUBCATEGORY NAME -->
+        <div class="form-group">
+            <input type="text" name="name" value="{{ subcategory.name }}" placeholder="Subcategory Name" required>
+        </div>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+{% endblock %}

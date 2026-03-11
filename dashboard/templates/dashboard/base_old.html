@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Luxuria Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+    --sidebar-width: 260px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #e8f7f4;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    width: var(--sidebar-width);
+    background: #d8efe9;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Title */
+.sidebar h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: #13493f;
+}
+
+/* Admin info */
+.admin-info {
+    margin-bottom: 20px;
+    color: #0c3c32;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Sidebar links */
+.sidebar a {
+    display: flex;                 /* 🔥 MOST IMPORTANT */
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: #225b4f;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 4px;
+    white-space: nowrap;           /* 🔥 no wrap */
+}
+
+.sidebar a:hover {
+    background: #bfe9df;
+    color: #0c3c32;
+}
+
+/* ================= MAIN ================= */
+.main {
+    margin-left: var(--sidebar-width);
+    padding: 30px 40px;
+    width: calc(100% - var(--sidebar-width));
+}
+</style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Luxuria</h2>
+
+    {% if request.session.dashboard_user_id %}
+        <div class="admin-info">
+            👤 {{ dashboard_admin.get_full_name|default:dashboard_admin.username }}
+        </div>
+    {% endif %}
+
+    <a href="{% url 'dashboard:dashboard_home' %}">📊 Dashboard</a>
+    <a href="{% url 'dashboard:category_list' %}">📁 Category</a>
+    <a href="{% url 'dashboard:subcategory_list' %}">🔗 Subcategory</a>
+    <a href="{% url 'dashboard:products_list' %}">📦 Products</a>
+    <a href="{% url 'dashboard:offers_list' %}">📢 Offers</a>
+    <a href="{% url 'dashboard:inventory' %}">🏬 Inventory</a>
+    <a href="{% url 'dashboard:orders_list' %}">🛒 Orders</a>
+    <a href="{% url 'dashboard:customers_list' %}">👥 Customers</a>
+    <a href="{% url 'dashboard:messages_list' %}">📧 Newsletter</a>
+    <a href="{% url 'dashboard:dashboard_support' %}">🎧 Support Tickets</a>
+    <a href="{% url 'dashboard:slider_list' %}">📸 Home Sliders</a>
+    <a href="{% url 'dashboard:deals_list' %}">🔥 Deals of the Day</a>
+    <a href="{% url 'dashboard:dashboard_logout' %}">🚪 Logout</a>
+</div>
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

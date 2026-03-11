@@ -1,0 +1,138 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Contact Messages{% endblock %}
+{% block content %}
+
+<style>
+.page-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #0b4e3d;
+    margin-bottom: 20px;
+}
+
+/* Card */
+.messages-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    max-width: 1100px;
+}
+
+/* Table */
+.messages-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.messages-card th {
+    background: #0F5C4B;
+    color: white;
+    padding: 14px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.messages-card td {
+    padding: 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #e6f4f1;
+    vertical-align: middle;
+}
+
+.messages-card tr:hover {
+    background: #f3fbf8;
+}
+
+/* Last message preview */
+.last-msg {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #444;
+}
+
+/* View button */
+.view-btn {
+    background: #0F5C4B;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-block;
+}
+.view-btn:hover {
+    background: #0a3e33;
+}
+
+/* Empty state */
+.empty-box {
+    text-align: center;
+    padding: 40px;
+    color: #777;
+    font-size: 15px;
+}
+</style>
+
+<h2 class="page-title">📩 Contact Messages</h2>
+
+<div class="messages-card">
+{% if messages %}
+<table>
+    <tr>
+        <th>#</th>
+        <th>Subject</th>
+        <th>User / Guest</th>
+        <th>Last Message</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+
+    {% for m in messages %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+
+        <td>
+            <strong>{{ m.thread.subject }}</strong>
+        </td>
+
+        <td>
+            {% if m.thread.user %}
+                {{ m.thread.user.username }}
+            {% else %}
+                {{ m.thread.guest_name }} (Guest)
+            {% endif %}
+        </td>
+
+        <td class="last-msg">
+            {{ m.message }}
+        </td>
+
+        <td>
+            {{ m.created_at|date:"d M Y h:i A" }}
+        </td>
+
+        <td>
+        {% if m.thread %}
+        <a href="{% url 'dashboard:dashboard_support_detail' m.thread.id %}"
+        class="view-btn">
+        View
+        </a>
+{% else %}
+    <span style="color:#999;">No Thread</span>
+{% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <div class="empty-box">
+        🚫 No contact messages found.
+    </div>
+{% endif %}
+</div>
+
+{% endblock %}

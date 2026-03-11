@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Admin | Luxuria</title>
+
+<style>
+/* ===== PAGE ===== */
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#e6fffa,#f0fdfa);
+}
+
+/* ===== WRAPPER ===== */
+.container{
+    width:1100px;
+    margin:70px auto;
+    display:flex;
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 25px 70px rgba(0,0,0,0.12);
+}
+
+/* ===== LEFT PANEL ===== */
+.left{
+    width:45%;
+    padding:80px 60px;
+    background:linear-gradient(135deg,#0f766e,#0d9488);
+    color:white;
+}
+.left h1{
+    font-size:44px;
+    margin-bottom:15px;
+}
+.left p{
+    font-size:16px;
+    line-height:1.6;
+    opacity:.95;
+}
+
+/* ===== RIGHT PANEL ===== */
+.right{
+    width:55%;
+    padding:70px 70px;
+}
+.right h2{
+    font-size:38px;
+    margin-bottom:35px;
+}
+
+/* ===== FORM ===== */
+label{
+    display:block;
+    font-weight:600;
+    margin-bottom:8px;
+    color:#0f172a;
+}
+
+input{
+    width:100%;
+    padding:14px 16px;
+    margin-bottom:24px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+    background:#f9fafb;
+    font-size:15px;
+}
+input:focus{
+    outline:none;
+    border-color:#0f766e;
+    background:#ffffff;
+}
+
+/* ===== BUTTON ===== */
+button{
+    width:100%;
+    padding:16px;
+    background:#0f766e;
+    color:white;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+button:hover{
+    background:#115e59;
+}
+
+/* ===== MESSAGES ===== */
+.msg{
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-size:14px;
+}
+.success{
+    background:#ecfdf5;
+    color:#047857;
+}
+.error{
+    background:#fef2f2;
+    color:#b91c1c;
+}
+
+/* ===== LINK ===== */
+.link{
+    text-align:center;
+    margin-top:22px;
+    font-size:15px;
+}
+.link a{
+    color:#0f766e;
+    font-weight:600;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+    <div class="left">
+        <h1>Welcome to Luxuria</h1>
+        <p>
+            Create a new administrator account to manage
+            products, orders, users and reports securely
+            from one powerful dashboard.
+        </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+        <h2>Create Admin</h2>
+
+        {% for message in messages %}
+            <div class="msg {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Admin Username</label>
+            <input type="text" name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">Create Admin</button>
+        </form>
+
+        <div class="link">
+            Already Admin?
+            <a href="{% url 'dashboard:dashboard_login' %}">Login</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

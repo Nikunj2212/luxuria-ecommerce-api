@@ -1,0 +1,80 @@
+{% extends "dashboard/base_old.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+
+<style>
+.dashboard-cards{
+  display:flex; gap:20px; margin-bottom:30px;
+}
+.card-box{
+  flex:1; background:#fff; padding:25px;
+  border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+.card-box h3{margin:0; font-size:16px; color:#666;}
+.card-box p{margin:5px 0 0;font-size:24px;font-weight:700;}
+.chart-wrapper{
+  background:#fff; padding:20px; border-radius:12px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+.top-products{margin-top:25px;}
+.top-products table{width:100%; background:#fff; padding:15px; border-radius:12px;}
+thead{font-weight:600; background:#efefef;}
+</style>
+
+<h2>Dashboard Overview</h2>
+
+<div class="dashboard-cards">
+  <div class="card-box">
+    <h3>Total Revenue</h3>
+    <p>₹{{ total_revenue }}</p>
+  </div>
+  <div class="card-box">
+    <h3>Total Orders</h3>
+    <p>{{ total_orders }}</p>
+  </div>
+  <div class="card-box">
+    <h3>Total Products</h3>
+    <p>{{ total_products }}</p>
+  </div>
+  <div class="card-box">
+    <h3>Total Users</h3>
+    <p>{{ total_users }}</p>
+  </div>
+</div>
+
+<div class="chart-wrapper">
+  <h3>Last 7 Days Sales</h3>
+  <canvas id="salesChart" height="80"></canvas>
+</div>
+
+<div class="top-products">
+  <h3>Top Selling Products</h3>
+  <table>
+    <thead>
+      <tr><td>Product</td><td>Sold</td></tr>
+    </thead>
+    {% for p in top_products %}
+    <tr><td>{{ p.product_name }}</td><td>{{ p.sold }}</td></tr>
+    {% empty %}
+    <tr><td colspan="2">No Sales Yet</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('salesChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: {{ graph_labels|safe }},
+    datasets: [{
+      label: 'Sales',
+      data: {{ graph_values|safe }},
+      borderWidth: 3
+    }]
+  }
+});
+</script>
+
+{% endblock %}

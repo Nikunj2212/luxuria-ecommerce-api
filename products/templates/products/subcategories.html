@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ category.name }} | Subcategories{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= WRAPPER ================= */
+.subcat-wrapper{
+    max-width:1300px;
+    margin:70px auto 100px;
+    padding:0 20px;
+}
+
+/* ================= TITLE ================= */
+.category-title{
+    text-align:center;
+    font-size:34px;
+    font-weight:600;
+    margin-bottom:50px;
+    color:var(--brand-color);
+}
+
+/* ================= GRID ================= */
+.subcat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:30px;
+    justify-content:center;
+}
+
+/* ================= CARD ================= */
+.subcat-card{
+    background:#fff;
+    border-radius:20px;
+    padding:32px 20px;
+    text-align:center;
+    text-decoration:none;
+    color:var(--text-dark);
+    box-shadow:0 10px 22px rgba(0,0,0,.08);
+    transition:.35s ease;
+}
+
+.subcat-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+
+/* ================= IMAGE ================= */
+.subcat-card img{
+    width:100px;
+    height:100px;
+    object-fit:contain;
+    margin-bottom:18px;
+}
+
+/* ================= NAME ================= */
+.subcat-card h4{
+    font-size:18px;
+    font-weight:600;
+    margin:0;
+}
+
+/* ================= EMPTY ================= */
+.empty{
+    text-align:center;
+    opacity:.6;
+    padding:90px 0;
+    font-size:18px;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:600px){
+    .category-title{
+        font-size:28px;
+    }
+    .subcat-card{
+        padding:26px 18px;
+    }
+}
+</style>
+
+<div class="subcat-wrapper">
+
+    <!-- ✅ CATEGORY NAME CENTER -->
+    <h2 class="category-title">{{ category.name }}</h2>
+
+    {% if subcategories %}
+        <div class="subcat-grid">
+            {% for sub in subcategories %}
+                <a href="{% url 'products:subcategory_products' sub.id %}" class="subcat-card">
+                    {% if sub.image %}
+                        <img src="{{ sub.image.url }}" alt="{{ sub.name }}">
+                    {% endif %}
+                    <h4>{{ sub.name }}</h4>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty">No subcategories available</div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

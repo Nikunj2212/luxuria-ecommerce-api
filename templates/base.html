@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+<meta charset="UTF-8">
+<title>{% block title %}Luxuria{% endblock %}</title>
+
+<style>
+:root{
+    --brand:#114b5f;
+    --bg:#e8f6f3;
+    --text:#0f1f1d;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:Poppins,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* ================= HEADER ================= */
+.main-header{
+    position:sticky;
+    top:0;
+    z-index:10000;
+    height:72px;
+    padding:0 40px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    background:#fff;
+    border-bottom:1px solid #d9ebe6;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:800;
+    color:var(--brand);
+    text-decoration:none;
+}
+
+.header-search {
+    position: relative;
+    width: 100%;
+}
+.header-search input{
+    width:100%;
+    padding:10px 16px;
+    border-radius:6px;
+    border:1px solid #d1d5db;
+}
+.search-results {
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    max-height: 350px;
+    overflow-y: auto;
+    display: none;
+    z-index: 999;
+}
+.result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    text-decoration: none;
+    color: #222;
+    border-bottom: 1px solid #eee;
+    transition: 0.2s ease;
+}
+
+.result-img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #f3f3f3;
+}
+
+
+.result-item:hover {
+    background: #f5f5f5;
+}
+
+.result-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-price {
+    font-size: 13px;
+    color: #0f6b6b;
+}
+
+.no-result {
+    padding: 10px;
+    color: #888;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    white-space:nowrap;
+}
+.header-right a{
+    text-decoration:none;
+    color:#111;
+    font-weight:500;
+}
+
+.icon-btn{
+    background:#114b5f;
+    color:#ffffff;
+    padding:8px 14px;
+    border-radius:999px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:42px;
+    height:42px;
+    font-size:18px;
+    box-shadow:0 4px 12px rgba(17,75,95,.25);
+    transition:.3s ease;
+}
+
+.icon-btn i{
+    color:#ffffff !important;
+}
+
+.icon-btn:hover{
+    background:#0d3c4a;
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(17,75,95,.35);
+}
+
+.cart-badge{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:#ff3b30;
+    color:#fff;
+    font-size:11px;
+    padding:3px 6px;
+    border-radius:50%;
+    min-width:18px;
+    text-align:center;
+}
+
+/* ================= DROPDOWN ================= */
+.mega-menu{position:relative;}
+.mega-link{cursor:pointer;}
+
+.mega-dropdown{
+    position:absolute;
+    top:100%;
+    left:0;
+    min-width:180px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    padding:6px 0; 
+    max-height:320px;
+    overflow-y:auto;  
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(8px);
+    transition:.2s ease;
+    z-index:99999;
+}
+.mega-menu.open .mega-dropdown{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+.mega-dropdown a{
+    display:block;
+    padding:7px 14px;
+    font-size:13px; 
+    color:#111;
+    text-decoration:none;
+}
+.mega-dropdown a:hover{background:#f1f5f9;}
+
+/* ================= FOOTER ================= */
+.lux-footer{
+    background:#0f0f0f;
+    color:#bbb;
+    padding-top:60px;
+    margin-top:0 !important;
+}
+
+.footer-container{
+    max-width:1300px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:40px;
+    padding:0 40px 50px;
+}
+
+.footer-col h4{
+    color:#fff;
+    margin-bottom:18px;
+    font-size:16px;
+    font-weight:600;
+}
+
+.footer-col p,
+.footer-col li{
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.footer-col ul{
+    list-style:none;
+    padding:0;
+}
+
+.footer-col a{
+    color:#aaa;
+    text-decoration:none;
+    transition:.3s;
+}
+.footer-col a:hover{
+    color:#fff;
+}
+
+/* Newsletter */
+.newsletter form{
+    display:flex;
+    margin-top:12px;
+}
+.newsletter input{
+    flex:1;
+    padding:12px;
+    border:none;
+    background:#1a1a1a;
+    color:#fff;
+}
+.newsletter button{
+    padding:12px 18px;
+    border:none;
+    background:#114b5f;
+    color:#fff;
+    cursor:pointer;
+}
+
+/* Bottom */
+.footer-bottom{
+    border-top:1px solid #222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+    font-size:13px;
+}
+
+.social-icons a{
+    margin-left:15px;
+    color:#bbb;
+    font-size:16px;
+    transition:.3s;
+}
+.social-icons a:hover{
+    color:#fff;
+}
+</style>
+</head>
+
+<body>
+
+<header class="main-header">
+    <a href="/" class="logo">LUXURIA</a>
+
+        <div class="header-search">
+            <input type="text"
+                id="search-input"
+                placeholder="Search for products, brands and more"
+                autocomplete="off">
+
+            <div id="search-results" class="search-results"></div>
+        </div>
+
+    <div class="header-right">
+        <a href="/">Home</a>
+
+        <div class="mega-menu" id="megaMenu">
+            <a class="mega-link" id="catBtn">Categories ▾</a>
+            <div class="mega-dropdown" id="catMenu">
+                {% for cat in categories %}
+                <a href="{% url 'products:category_products' cat.id %}">
+                    {{ cat.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="{% url 'collection' %}">Collection</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+
+        {% if user.is_authenticated %}
+            <a href="/accounts/profile/" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        {% else %}
+            <a href="/login/" class="icon-btn">
+                <i class="fa-solid fa-right-to-bracket"></i>
+            </a>
+        {% endif %}
+        <a href="{% url 'carts:cart' %}" class="icon-btn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-badge" id="cart-count"
+                {% if cart_item_count == 0 %}style="display:none;"{% endif %}>
+                {{ cart_item_count }}
+            </span>
+        </a>
+        <a href="{% url 'wishlist' %}" class="icon-btn">
+            <i class="fa-solid fa-heart"></i>
+        
+            <span class="cart-badge" id="wishlist-count"
+                {% if wishlist_count == 0 %}style="display:none;"{% endif %}>
+                {{ wishlist_count }}
+            </span>
+        </a>
+        </div>
+</header>
+
+<main>{% block content %}{% endblock %}</main>
+
+<!-- ================= JS ================= -->
+
+<script>
+
+
+const searchInput = document.getElementById("search-input");
+const resultsBox = document.getElementById("search-results");
+
+searchInput.addEventListener("keyup", function () {
+    let query = this.value.trim();
+
+    if (query.length > 0) {
+
+        fetch(`/products/search-suggestions/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+
+                resultsBox.innerHTML = "";
+
+                if (data.length === 0) {
+                    resultsBox.innerHTML = "<div class='no-result'>No results found</div>";
+                    resultsBox.style.display = "block";
+                    return;
+                }
+
+                data.forEach(item => {
+
+                    let priceHtml = "";
+
+                    if (item.type === "product" && item.price) {
+                        priceHtml = `<div class="result-price">₹${item.price}</div>`;
+                    }
+
+                    resultsBox.innerHTML += `
+                        <a href="${item.url}" class="result-item">
+                            <img src="${item.image}" class="result-img">
+                            <div class="result-content">
+                                <div class="result-name">${item.name}</div>
+                                ${priceHtml}
+                            </div>
+                        </a>
+                    `;
+                });
+                resultsBox.style.display = "block";
+            });
+
+    } else {
+        resultsBox.style.display = "none";
+    }
+});
+
+
+/* 🔥 Close dropdown when clicking outside */
+document.addEventListener("click", function (e) {
+    if (!searchInput.contains(e.target) && !resultsBox.contains(e.target)) {
+        resultsBox.style.display = "none";
+    }
+});
+
+/* ================= DROPDOWN ================= */
+document.addEventListener("DOMContentLoaded", function () {
+    const megaMenu = document.getElementById("megaMenu");
+    const btn = document.getElementById("catBtn");
+    const dropdown = document.getElementById("catMenu");
+
+    if (!megaMenu || !btn || !dropdown) return;
+
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        megaMenu.classList.toggle("open");
+    });
+
+    dropdown.addEventListener("click", function (e) {
+        e.stopPropagation();
+    });
+
+    document.addEventListener("click", function () {
+        megaMenu.classList.remove("open");
+    });
+});
+
+
+/* ================= ADD TO CART (FIXED SINGLE LISTENER) ================= */
+document.addEventListener("click", function(e){
+
+    const btn = e.target.closest(".add-to-cart-btn");
+    if(!btn) return;
+
+    e.preventDefault();
+
+    if(btn.dataset.loading === "true") return;
+    btn.dataset.loading = "true";
+
+    const productId = btn.dataset.id;
+    if(!productId){
+        btn.dataset.loading = "false";
+        return;
+    }
+
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if(!csrfMeta){
+        console.error("CSRF token not found");
+        btn.dataset.loading = "false";
+        return;
+    }
+
+    fetch(`/cart/add/${productId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrfMeta.content,
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => {
+
+        // 🔥 IMPORTANT: Agar login required hai
+        if (res.redirected) {
+            window.location.href = res.url;
+            return null;
+        }
+
+        if(!res.ok) throw new Error("Network response not ok");
+        return res.json();
+    })
+    .then(data => {
+
+        if(!data) return; // redirect case
+
+        const badge = document.getElementById("cart-count");
+
+        if(badge){
+            badge.innerText = data.cart_count;
+            badge.style.display = data.cart_count > 0 ? "flex" : "none";
+        }
+
+        // ✅ Animation only
+        btn.innerText = "Added ✓";
+        btn.style.background = "#16a34a";
+
+        setTimeout(()=>{
+            btn.innerText = "Added";
+            btn.style.background = "#16a34a";
+            btn.dataset.loading = "false";
+        },1200);
+
+    })
+    .catch(error => {
+        console.error("Cart Error:", error);
+        btn.dataset.loading = "false";
+    });
+
+});
+
+
+/* ================= WISHLIST ================= */
+document.addEventListener("click", function(e){
+
+    const btn = e.target.closest(".wishlist-btn");
+    if(!btn) return;
+
+    e.preventDefault();
+
+    const productId = btn.dataset.id;
+    if(!productId) return;
+
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content,
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => {
+
+        // 🔥 LOGIN REDIRECT HANDLE
+        if (res.redirected) {
+            window.location.href = res.url;
+            return null;
+        }
+
+        if(!res.ok) throw new Error("Network response not ok");
+
+        return res.json();
+    })
+    .then(data => {
+
+        if(!data) return; // redirect case
+
+        const icon = btn.querySelector("i");
+
+        if(data.status === "added"){
+
+            btn.classList.add("active");
+
+            if(icon){
+                icon.classList.remove("fa-regular");
+                icon.classList.add("fa-solid");
+            }
+
+            if(btn.classList.contains("detail-wishlist-btn")){
+                btn.innerHTML = '<i class="fa-solid fa-heart"></i> Added to Wishlist';
+            }
+
+        }else{
+
+            btn.classList.remove("active");
+
+            if(icon){
+                icon.classList.remove("fa-solid");
+                icon.classList.add("fa-regular");
+            }
+
+            if(btn.classList.contains("detail-wishlist-btn")){
+                btn.innerHTML = '<i class="fa-regular fa-heart"></i> Add to Wishlist';
+            }
+        }
+
+        const badge = document.getElementById("wishlist-count");
+        if(badge){
+            if(data.wishlist_count > 0){
+                badge.innerText = data.wishlist_count;
+                badge.style.display = "flex";
+            } else {
+                badge.style.display = "none";
+            }
+        }
+
+    })
+    .catch(err => console.log("Wishlist Error:", err));
+
+});
+
+</script>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="lux-footer">
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <p>📞 78020 97850</p>
+            <p>📧 support@luxuria.com</p>
+            <p>📍 Ahmedabad, India</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="#">Top Deals</a></li>
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Best Sellers</a></li>
+                <li><a href="#">Electronics</a></li>
+                <li><a href="#">Fashion</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Payments</a></li>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col newsletter">
+            <h4>Newsletter</h4>
+            <p>Be the first to hear about our latest offers</p>
+            <form>
+                <input type="email" placeholder="Your Email Address">
+                <button type="submit">→</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Luxuria. All Rights Reserved.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

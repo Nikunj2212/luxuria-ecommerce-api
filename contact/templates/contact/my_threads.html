@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}My Support Tickets{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:800px;margin:auto;margin-top:40px">
+
+    <h2 style="margin-bottom:20px;">My Support Tickets</h2>
+
+    {% if threads %}
+        <table style="width:100%;border-collapse:collapse;background:white">
+            <thead>
+                <tr style="background:#eee">
+                    <th style="padding:10px;text-align:left;">Subject</th>
+                    <th style="padding:10px;text-align:left;">Status</th>
+                    <th style="padding:10px;text-align:left;">Last Updated</th>
+                    <th style="padding:10px;text-align:left;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for t in threads %}
+                <tr style="border-bottom:1px solid #ddd">
+                    <td style="padding:10px;">{{ t.subject }}</td>
+
+                    <td style="padding:10px;">
+                        {% if t.status == "open" %}
+                            <span style="color:green;font-weight:bold;">Open</span>
+                        {% else %}
+                            <span style="color:red;font-weight:bold;">Closed</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="padding:10px;">{{ t.updated_at|date:"M d, Y H:i A" }}</td>
+
+                    <td style="padding:10px;">
+                        <a href="{% url 'my_thread_detail' t.id %}"
+                           style="padding:6px 12px;border-radius:4px;background:#114b5f;color:white;text-decoration:none;">
+                           View
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No support tickets yet!</p>
+        <a href="{% url 'contact_page' %}"
+           style="padding:8px 14px;background:#114b5f;color:white;border-radius:5px;text-decoration:none;">
+           Start a conversation
+        </a>
+    {% endif %}
+
+</div>
+{% endblock %}
